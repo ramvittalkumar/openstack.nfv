@@ -1,0 +1,115 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Login</title>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+    integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+    integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+    integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  
+    <link rel='stylesheet' href="{% static  "css/bootstrap.css" %}"/>
+    <link rel='stylesheet' href="{% static  "css/Common.css" %}"/>
+    <link rel='stylesheet' href="{% static  "css/bootstrap-datetimepicker.min.css" %}"/>
+    <link rel='stylesheet' href="{% static  "css/dataTables.bootstrap.min.css" %}"/>
+    
+    <script src="{% static  "js/jquery-2.1.4.js" %}"></script>
+    <script src="{% static  "js/jquery.validate.min.js" %}"></script>
+    <script src="{% static  "js/bootstrap.js" %}"></script>
+    <script src="{% static  "js/bootstrap-datetimepicker.min.js" %}"></script>
+    <script src="{% static  "js/jquery.dataTables.min.js" %}"></script>
+    <script src="{% static  "js/dataTables.responsive.min.js" %}"></script>
+    <script src="{% static  "js/Login.js" %}"></script>
+    
+</head>
+
+<body>
+    <style>
+        .form-login {
+            background-color: #EDEDED;
+            padding-top: 10px;
+            padding-bottom: 20px;
+            padding-left: 20px;
+            padding-right: 20px;
+            border-radius: 15px;
+            border-color: #d2d2d2;
+            border-width: 5px;
+            box-shadow: 0 1px 0 #cfcfcf;
+            
+        }
+
+        h4 {
+            border: 0 solid #fff;
+            border-bottom-width: 1px;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        .wrapper {
+            text-align: center;
+        }
+    </style>
+     
+    <form action="/nfv/auth/" method="post">{% csrf_token %}
+     <div class="container" style="background-color: #F5F5F0;">
+        <img style="float: right; width: 70px; height: 70px" alt="Cinque Terre" src="{% static "nfv_img/comtech.png" %}" />
+        <div>
+            <div class="panel-heading" style="background-color: #F5F5F0;">
+                <img style="float: left; width: 50px; height: 50px" class="img-circle" alt="Cinque Terre" src="{% static "nfv_img/Cognizant.jpg" %}" />
+                <div class="content-heading">
+                    <h1 style="font-size: medium; color: #006699; font-weight: bold; ">
+                        &nbsp &nbsp NFV Orchestration
+                    </h1>
+                </div>
+            </div>
+        </div>
+
+         <div style="background-color: #373737;">
+             <div class="row">
+                 <div class="col-md-offset-4 col-md-5">
+                     <br />  <br /> <br /> <br /> <br />
+                    
+                     <div class="form-login" id="login">
+                        
+                         <div class="panel-heading" style="background-color: #006699;">
+                             <div class="content-heading">
+                                 <h5 style="font-size:medium; color:white; text-align:center"> Login </h5>
+                             </div>
+                         </div>
+                         <br />
+                         <input type="text" id="username" class="form-control input-sm chat-input Login" placeholder="username" name="username" />{{ form.username }}
+                         <br />
+                         <input type="password" id="password" class="form-control input-sm chat-input Login" placeholder="password" name="password" />{{ form.password }}
+                         <br />
+                         <div align="left">
+                             <span class="group-btn">
+                                 <!--<button type="submit" id="submitLogin" class="btn btn-success" onclick="return ASPvalidate();">Submit</button>-->
+                                 <button type="submit" id="submitLogin" class="btn btn-success" value="submit">Submit</button>
+                                <!-- <input type="hidden" name="next" value="{{ next }}" />-->
+                             </span>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+             <br /> <br /><br /> <br /> <br /> 
+         </div>
+
+        <br />
+        <div class="panel panel-heading" style="background-color: #C4C4C0">
+            <div class="panel-heading" style="text-align: center">Cognizant copyright &nbsp&nbsp</div>
+        </div>
+    </div>
+     </form>
+     
+</body>
+</html>

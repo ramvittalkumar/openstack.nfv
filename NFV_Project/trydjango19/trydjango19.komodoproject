@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Komodo Project File - DO NOT EDIT -->
+<project id="e1afade0-331b-9948-9b7f-3fd6bcf3f6e0" kpf_version="5" name="trydjango19.komodoproject">
+<preference-set idref="e1afade0-331b-9948-9b7f-3fd6bcf3f6e0" id="project" preftype="project">
+<preference-set id="Invocations">
+<preference-set id="Project">
+  <string id="cookieparams"></string>
+  <string id="cwd">/Users/cccuser/Documents</string>
+  <string id="documentRoot"></string>
+  <string id="executable-params"></string>
+  <string id="filename"></string>
+  <string id="getparams"></string>
+  <string id="language">Python</string>
+  <string id="mpostparams"></string>
+  <string id="params"></string>
+  <string id="postparams"></string>
+  <string id="posttype">application/x-www-form-urlencoded</string>
+  <string id="request-method">GET</string>
+  <boolean id="show-dialog">1</boolean>
+  <boolean id="sim-cgi">0</boolean>
+  <boolean id="use-console">0</boolean>
+  <string id="userCGIEnvironment"></string>
+  <string id="userEnvironment"></string>
+</preference-set>
+</preference-set>
+  <string id="currentInvocationLanguage">Python</string>
+  <string id="import_dirname">/Users/cccuser/Documents</string>
+  <string id="language">Python</string>
+  <string id="lastInvocation">Project</string>
+  <string id="last_local_directory">None</string>
+  <string id="last_remote_directory">None</string>
+</preference-set>
+</project>
