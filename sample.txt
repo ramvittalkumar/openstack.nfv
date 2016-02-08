@@ -1,0 +1,500 @@
+  127    491  ls
+  128    492  source bin/activate
+  129    493  ls
+  130    494  cd src
+  131    495  ls
+  132    496  python manage.py runserver
+  133    497  python manage.py runserver
+  134    498  python manage.py runserver
+  135    499  history
+  136  MACLT017854:~ cccuser$ python manage.py runserver  204  gcloud init
+  137    205  gcloud compute instances list
+  138    206  gcloud ssh puppet1-puppet-master
+  139    207  gcloud compute ssh puppet1-puppet-master
+  140    208  gcloud compute instances list
+  141    209  gcloud compute ssh puppet-agent-1
+  142    210  cd /usr/local/bin
+  143    211  pwd
+  144    212  ls
+  145    213  cd git
+  146    214  which git
+  147    215  get --version
+  148    216  git --version
+  149    217  git config -l
+  150    218  git config --global user.name "Ben"
+  151    219  git config --global user.email "benjamin.achayanathan@cognizant.com
+  152    220  git config --global user.email "benjamin.achayanathan@cognizant.com"
+  153    221  git --version
+  154    222  git config -l
+  155    223  git config --global user.email "benjamin.achayanathan@cognizant.com" 
+  156    224  git clone
+  157    225  python manage.py runserver
+  158    226  ls
+  159    227  cd Documents/
+  160    228  ls
+  161    229  cd openstack.nfv
+  162    230  ls
+  163    231  cd NFV_Project/
+  164    232  ls
+  165    233  cd trydjango19/
+  166    234  ls
+  167    235  source bin/activate
+  168    236  python manage.py runserver
+  169    237  ls
+  170    238  django-admin.py startproject trydjango19
+  171    239  ls
+  172    240  cd tr/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python: can't open file 'manage.py': [Errno 2] No such file or directory
+  173  MACLT017854:~ cccuser$   205  gcloud compute instances list
+  174  -bash: 205: command not found
+  175  MACLT017854:~ cccuser$   206  gcloud ssh puppet1-puppet-master
+  176  -bash: 206: command not found
+  177  MACLT017854:~ cccuser$   207  gcloud compute ssh puppet1-puppet-master
+  178  -bash: 207: command not found
+  179  ps -ef | grep mysql
+  180  sudo kill -9 15891 
+  181  ps -ef | grep mysql
+  182  mysqld
+  183  service mysqld start
+  184  mysql
+  185  sudo mysql
+  186  sudo find / -name mysql
+  187  /usr/local/mysql/bin/mysqld --skip-grant-tables
+  188  sudo /usr/local/mysql/bin/mysqld --skip-grant-tables
+  189  sudo /usr/local/mysql/bin/mysqld -u root
+  190  sudo /usr/local/mysql/bin/mysql -u root
+  191  sudo /usr/local/mysql/bin/mysql -u root -p
+  192  history > history.txt
+  193  vi history.txt 
+  194  sudo find / -name 'mysql_config'
+  195  sudo vi /etc/paths
+  196  which mysql_config
+  197  "which mysql_config"
+  198  which mysql_config
+  199  which python
+  200  which mysql
+  201  sudo find / -name 'site.cfg'
+  202  cd Documents/
+  203  ls
+  204  cd NFV_Project
+  205  ls
+  206  cd trydjango19/
+  207  ls
+  208  source bin/activate
+  209  ls
+  210  cd src
+  211  ls
+  212  python manage.py runserver
+  213  python manage.py runserver
+  214  ls
+  215  python manage.py migrate
+  216  ls
+  217  cd ..
+  218  ls
+  219  cd src
+  220  ls
+  221  pip install django mysqlclient
+  222  pip install --upgrade pip
+  223  pip install django mysqlclient
+  224  url https://bootstrap.pypa.io/ez_setup.py -o - | python
+  225  ls
+  226  python manage.py migrate
+  227  easy_install mysql_python
+  228  pip install django mysqlclient
+  229  pip install mysql-python
+  230  locate mysql_config
+  231  locate site.cfg
+  232  python manage.py migrate
+  233  python manage.py migrate
+  234  pip install MySQL-python
+  235  python manage.py migrate
+  236  pip install mysql-python
+  237  pip install mysql-python
+  238  pip install mysql-python
+  239  pip install mysql-python
+  240  pip install mysql-python
+  241  pip install mysql-python
+  242  ls
+  243  pip
+  244  pip install mysql-python
+  245  pip install python-dev
+  246  bew install python
+  247  brew install python
+  248  sudo brew install python
+  249  pip install mysql-python
+  250  sudo pip install mysql-python
+  251  which python
+  252  easy_install -U distribute
+  253  pip install MySql-python
+  254  pip install mysql-python
+  255  sudo apt-get install libmysqlclient-dev
+  256  pip install libmysqlclient-dev
+  257  curl -H 'Accept: application/json; indent=4' -u admin:password http://127.0.0.1:8001/users/
+  258  curl -H 'Accept: application/json; indent=4' -u admin:Openstack http://127.0.0.1:8001/users/
+  259  curl -H 'Accept: application/json; indent=4' -u admin:Openstack http://192.168.1.11:8001/users/
+  260  curl -H 'Accept: application/json; indent=4' -u admin:Openstack http://192.168.1.11:8001/users/
+  261  curl -H 'Accept: application/json; indent=4' -u admin:Openstack http://192.168.1.11:8001/users/
+  262  curl -H 'Accept: application/json; indent=4' -u Ben:Openstack http://192.168.1.11:8001/users/
+  263  curl -H 'Accept: application/json; indent=4' -u Ram:Openstack http://192.168.1.11:8001/users/
+  264  curl -H 'Accept: application/json; indent=4' -u Ram:Openstack http://192.168.1.11:8001/users/
+  265  curl -H 'Accept: application/json; indent=4' -u admin:Openstack http://192.168.1.11:8001/users/
+  266  which mysql_config
+  267  sudo find / -name 'mysql_config'
+  268  ifconfig
+  269  history
+  270  ls
+  271  cd Downloads/
+  272  ls
+  273  cd mysqlclient-1.3.7
+  274  ls
+  275  python setup.py build
+  276  python setup.py build
+  277  cd ..
+  278  ls
+  279  python ez_setup.py
+  280  python setup.py build
+  281  cd mysqlclient-1.3.7
+  282  python setup.py build
+  283  python setup.py build
+  284  python setup.py build
+  285  clear
+  286  python setup.py build
+  287  which mysql_config
+  288  locate mysql_config
+  289  sudo apt-get update
+  290  python setup.py install
+  291  sudo apt-get install libmysqlclient-dev
+  292  pip install linmysqlclient-dev
+  293  pip install libmysqlclient-dev
+  294  pip install --upgrade pip
+  295  sudo pip install --upgrade pip
+  296  python setup.py install
+  297  pip install python-dev
+  298  python setup.py install
+  299  pip install libmysqlclient-dev
+  300  cd ..
+  301  python ez_setup.py 
+  302  locate mysql-config
+  303  which mysql-config
+  304  cd mysqlclient-1.3.7
+  305  locate mysql-config
+  306  which mysql-config
+  307  sudo find / - name 'mysql_config'
+  308  sudo find / -name 'mysql_config'
+  309  ls
+  310  vi site.cfg
+  311  python setup.py install
+  312  ls
+  313  vi site.cfg
+  314  python setup.py install
+  315  python setup.py build
+  316  sudo python setup.py install
+  317  ls
+  318  vi site.cfg
+  319  python setup.py build
+  320  sudo python setup.py install
+  321  vi site.cfg
+  322  python setup.py build
+  323  vi site.cfg
+  324  python setup.py build
+  325  vi site.cfg
+  326  python setup.py build
+  327  vi site.cfg
+  328  python setup.py build
+  329  python setup.py build
+  330  vi site.cfg
+  331  python setup.py build
+  332  python setup.py build
+  333  vi site.cfg
+  334  python setup.py build
+  335  cd .
+  336  cd setuptools-0.9.6
+  337  python setup.py build
+  338  sudo python setup.py install
+  339  cd ..
+  340  cd mysqlclient-1.3.7
+  341  vi site.cfg
+  342  vi site.cfg
+  343  python setup.py build
+  344  sudo python setup.py install
+  345  vi site.cfg
+  346  python setup.py build
+  347  sudo python setup.py install
+  348  ls
+  349  pwd
+  350  find / -name tutorial
+  351  sudo find / -name tutorial
+  352  sudo find / -name quickstart
+  353  pwd
+  354  cd 
+  355  ls
+  356  cd Documents/Python_Files/
+  357  ls
+  358  clear
+  359  mkdir tutorial
+  360  cd tutorial/
+  361  virtualenv env
+  362  source env/bin/activate
+  363  pip install django
+  364  pip install djangorestframework
+  365  django-admin.py startproject tutorial
+  366  cd tutorial/
+  367  django-admin.py startapp quickstart
+  368  cd ..
+  369  ls -lrt
+  370  python manage.py migrate
+  371  cd tutorial/
+  372  ls
+  373  python manage.py migrate
+  374  python manage.py createsuperuser
+  375  ls
+  376  cd quickstart/
+  377  ls
+  378  vi serializers.py
+  379  ls
+  380  cd ..
+  381  ls -lrt
+  382  cd quickstart/
+  383  ls
+  384  vi views.py 
+  385  vi ../tutorial/urls.py
+  386  ls
+  387  pwd
+  388  cd ..
+  389  ls
+  390  cd tutorial/
+  391  ls
+  392  vi settings.py
+  393  pwd
+  394  ls
+  395  cd ..
+  396  ls
+  397  python manage.py runserver
+  398  python ./manage.py runserver
+  399  ls
+  400  cd tutorial/
+  401  ls
+  402  pwd
+  403  ls
+  404  cd ..
+  405  ls
+  406  cd quickstart/
+  407  ls
+  408  pwd
+  409  pwd
+  410  ls -lrt
+  411  cd ..
+  412  ls
+  413  python ./manage.py runserver
+  414  pwd
+  415  ls
+  416  cd ..
+  417  ls
+  418  cd tutorial/
+  419  ls
+  420  cd tutorial/
+  421  ls
+  422  pwd
+  423  ls
+  424  cd ..
+  425  ls
+  426  mv quickstart tutorial/
+  427  ls
+  428  cd tutorial/
+  429  ls
+  430  pwd
+  431  ls
+  432  pwd
+  433  cd ..
+  434  ls
+  435  python manage.py runserver
+  436  pwd
+  437  ls
+  438  cd tutorial/
+  439  ls
+  440  vi settings.py
+  441  ifconfig
+  442  python manage.py runserver 127.0.0.1:8001
+  443  pwd
+  444  ;s
+  445  ls
+  446  pwd
+  447  cd ..
+  448  ls
+  449  python manage.py runserver 127.0.0.1:8001
+  450  history
+  451  pwd
+  452  python manage.py createsuperuser
+  453  python manage.py runserver 127.0.0.1:8001
+  454  python manage.py runserver 0.0.0.0:8001
+  455  ls
+  456  cd Documents/
+  457  ls
+  458  cd CHPOC-master/
+  459  ls
+  460  cd chappapi/
+  461  ls
+  462  cd api
+  463  ls
+  464  cd ..
+  465  ls
+  466  cd ..
+  467  ls
+  468  ls
+  469  cd ..
+  470  ls
+  471  cd CHPOC-master/
+  472  ls
+  473  source bin/activate
+  474  virtualenv env
+  475  ls
+  476  source bin/activate
+  477  source ./env/bin/activate
+  478  ls
+  479  python manage.py runserver
+  480  django-admin.py startproject chpoc
+  481  ls
+  482  python manage.py runserver
+  483  python
+  484  systemctl start mysqld
+  485  sudo service mysql restart
+  486  sudo service mysql start
+  487  ls
+  488  pwd
+  489  python manage.py runserver
+  490  ls
+  491  pwd
+  492  bin source/activate
+  493  cd ..
+  494  ls
+  495  bin source/activate
+  496  source bin/activate
+  497  ls
+  498  cd src
+  499  ls
+  500  python manage.py runserver
+  501  /etc
+  502  ~/etc
+  503  ls
+  504  cd /etc/hosts
+  505  pwd
+  506  cd ~/etc/hosts
+  507  cd ..
+  508  cd ..
+  509  ls
+  510  cd etc/hosts
+  511  cd etc
+  512  ls
+  513  cd hosts
+  514  cd /hosts
+  515  cd hosts
+  516  vi hosts
+  517  telnet 3306
+  518  ls
+  519  cd ..
+  520  cd ..
+  521  ls
+  522  cd Users
+  523  ls
+  524  cd cccuser
+  525  ls
+  526  cd usr/local/mysql
+  527  find  usr/local/mysql
+  528  sudo /usr/local/mysql/support-files/mysql.server start
+  529  sudo /usr/local/mysql/support-files/mysql.server restart
+  530  sudo /usr/local/mysql/support-files/mysql.server stop
+  531  ps -ef | grep mysql
+  532  sudo /usr/local/mysql/support-files/mysql.server start
+  533  cd /usr/local
+  534  ls
+  535  cd mysql
+  536  ls
+  537  cd support-files/
+  538  ls
+  539  mqsql.server start
+  540  sudo mysql.server start
+  541  ls
+  542  mysql.server stop
+  543  mysql.server
+  544  ls
+  545  sudo mysql.server restart
+  546  sudo find / -name mysql
+  547  echo $PATH
+  548  /usr/local/mysql/bin/mysql start
+  549  /usr/local/mysql/bin/mysql
+  550  sudo rm -rf /tmp/mysql.sock
+  551  /usr/local/mysql/bin/mysql
+  552  /usr/local/mysql/bin/mysql_config
+  553  find / -name mysql/my.cnf
+  554  sudo find / -name mysql/my.cnf
+  555  mysql
+  556  mysql -u root
+  557  ps -ef | grep mysql
+  558  ps -ef | grep mysqld
+  559  cat /tmp/mysql.sock
+  560  ln -sfv /usr/local/opt/mysql/*.plist ~/Library/LaunchAgents
+  561  launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist
+  562  mysql -u root
+  563  which mysql
+  564  /usr/local/bin/mysql
+  565  vi /usr/local/bin/mysql
+  566  cd /usr/local/
+  567  ls -lrt
+  568  cd mysql
+  569  ls
+  570  clear
+  571  ls -lrt
+  572  cat README 
+  573  ls -lrt
+  574  cd bin/
+  575  ls
+  576  pwd
+  577  mysqld_safe
+  578  sudo mysqld_safe
+  579  ps -ef | grep mysql
+  580  sudo mysql
+  581  clear
+  582  ls -lrt
+  583  mysqldump
+  584  mysqldump --all-databases
+  585  pwd
+  586  clear
+  587  pwd
+  588  cd 
+  589  pwd
+  590  ls
+  591  cd Documents/
+  592  ls
+  593  cd openstack.nfv/
+  594  ls -lrt
+  595  cd NFV_Project/
+  596  ls
+  597  cd trydjango19/
+  598  ls
+  599  clear
+  600  pwd
+  601  cd ..
+  602  ls
+  603  cd ..
+  604  ls -lrt
+  605  cd ..
+  606  ls -lrt
+  607  pwd
+  608  ls
+  609  cd NFV_Project
+  610  sols
+  611  ls
+  612  ls -lrt
+  613  cd trydjango19/
+  614  ls -lrt
+  615  cd ..
+  616  ls -lrt
+  617  clear
+  618  pwd
+  619  ls
+  620  pwd
+  621  cd ..
+  622  ls -lrt
+  623  cd openstack.nfv/
+  624  ls -lrt
+  625  history
+  626  history > sample.txt
