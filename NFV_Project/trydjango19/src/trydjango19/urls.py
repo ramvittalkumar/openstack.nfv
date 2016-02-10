@@ -39,6 +39,7 @@ urlpatterns = [
     url(r'^nfv/developer/$', "nfv.views.developer"),
     url(r'^nfv/admin/$', "nfv.views.admin"),
     url(r'^nfv/enterprise/$', "nfv.views.enterprise"),
+    url(r'^$', "nfv.views.auth_view"),
  #   url(r'^nfv/$', "login"),
  #   url(r'^auth/$', "auth_view"),
  #   url(r'^developer/$', "Developer"),
