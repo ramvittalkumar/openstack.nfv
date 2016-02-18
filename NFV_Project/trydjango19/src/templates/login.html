@@ -29,9 +29,7 @@
     <script src="{% static  "js/bootstrap-datetimepicker.min.js" %}"></script>
     <script src="{% static  "js/jquery.dataTables.min.js" %}"></script>
     <script src="{% static  "js/dataTables.responsive.min.js" %}"></script>
-    <script src="{% static  "js/Login.js" %}"></script>
-    
-</head>
+    <script src="{% static  "js/Login.js" %}" ></script>
 
 <body>
     <style>
@@ -60,7 +58,7 @@
         }
     </style>
      
-    <form action="/nfv/auth/" method="post">{% csrf_token %}
+   <form id="frmlogin" action="/nfv/auth/" method="post"> {% csrf_token %}
      <div class="container" style="background-color: #F5F5F0;">
         <img style="float: right; width: 70px; height: 70px" alt="Cinque Terre" src="{% static "nfv_img/comtech.png" %}" />
         <div>
@@ -82,7 +80,7 @@
                      <div class="form-login" id="login">
                         
                          <div class="panel-heading" style="background-color: #006699;">
-                             <div class="content-heading">
+                             <div id="divlogin" class="content-heading">
                                  <h5 style="font-size:medium; color:white; text-align:center"> Login </h5>
                              </div>
                          </div>
@@ -94,7 +92,7 @@
                          <div align="left">
                              <span class="group-btn">
                                  <!--<button type="submit" id="submitLogin" class="btn btn-success" onclick="return ASPvalidate();">Submit</button>-->
-                                 <button type="submit" id="submitLogin" class="btn btn-success" value="submit">Submit</button>
+                                 <button type="submit" id="submitLogin" class="btn btn-success" onclick="return ASPvalidate()" value="submit">Submit</button>
                                 <!-- <input type="hidden" name="next" value="{{ next }}" />-->
                              </span>
                          </div>

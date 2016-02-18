@@ -133,7 +133,7 @@
 
 </head>
 <body>
-
+<form id="frmDeveloper" action="nfv/createVNF/" method="POST" > {% csrf_token %}
     <div class="container" style="background-color: #F5F5F0;">  
         <img style="float: right; width: 70px; height: 70px" alt="Cinque Terre" src="{% static "nfv_img/comtech.png" %}" />
         <div >
@@ -222,7 +222,7 @@
             <br />
             <div class="form-group" align="right">
                 <button type="reset" id="resetUser" onclick="clearKnownUservalue()" class="btn btn-success">Reset</button>
-                <button type="submit" id="submitUser" class="btn btn-success" onclick="AddKnownUserValid()">Submit</button>
+                <button type="submit" id="submitUser" class="btn btn-success" >Submit</button>
                 <label id="lblmessage" style="color: red; font-size: small" for="result"></label>
             </div>
         </div>
@@ -234,6 +234,6 @@
     <script>
        Initialload();
     </script>
-   
+   </form>
 </body>
 </html>
