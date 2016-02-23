@@ -31,6 +31,15 @@
     <script src="{% static  "js/Developer.js" %}"></script>
     <script src="{% static  "js/Common.js" %}"></script>
 
+
+    <script>
+        $( document ).ready(function() {
+            {% if messages %}
+                $("#statusModal").modal("show");
+            {% endif %}
+        });
+    </script>
+
     <style>
         .img-zoom {
             width: 310px;
@@ -133,8 +142,18 @@
 
 </head>
 <body>
-<form id="frmDeveloper" action="nfv/createVNF/" method="POST" > {% csrf_token %}
-    <div class="container" style="background-color: #F5F5F0;">  
+
+<script>
+    function printUsr()
+
+    {
+        alert('Inside printusr');
+        alert('{{username}}');
+    }
+
+</script>
+<form id="frmDeveloper" action="nfv/createVNF/" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+    <div class="container" style="background-color: #F5F5F0;">
         <img style="float: right; width: 70px; height: 70px" alt="Cinque Terre" src="{% static "nfv_img/comtech.png" %}" />
         <div >
             <div class="panel-heading" style="background-color: #F5F5F0;">
@@ -146,7 +165,7 @@
                         <span id="loginuserimage" class="glyphicon glyphicon-user" style="font-size: smaller; border: thin; color: #006699; text-align: right; float: right; "></span>
                         <p style="font-size: small; text-align:right;float:right;">&nbsp</p>
                         <label style="font-size: x-small; color: #006699; text-align: right; float: right; " for="username" id="lblLoginUsrName"></label>
-                        <p style="font-size: smaller; text-align: right; float: right; color: #006699; "> Welcome &nbsp {{full_name}} </p>
+                        <p style="font-size: smaller; text-align: right; float: right; color: #006699; "> Welcome &nbsp Ram </p>
                     </h1>
                 </div>
             </div>
@@ -226,6 +245,32 @@
                 <label id="lblmessage" style="color: red; font-size: small" for="result"></label>
             </div>
         </div>
+
+        <div id="statusModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Status</h4>
+      </div>
+      <div class="modal-body">
+        {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+          <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
             <br />
             <div class="panel panel-heading" style="background-color: #C4C4C0">
                 <div class="panel-heading" style="text-align: center">Cognizant copyright &nbsp&nbsp</div>

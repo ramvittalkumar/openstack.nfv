@@ -4,15 +4,15 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group
 from django.contrib import auth
 from django.core.context_processors import csrf
-from trydjango19 import settings
 from django.contrib.auth.decorators import login_required
-import MySQLdb
+from django.contrib import messages
 from django.db import connections
 from collections import namedtuple
 from django.template import RequestContext
 from django.shortcuts import render
 import json
 import requests
+import random
 
 
 def namedtuplefetchall(cursor):
@@ -59,7 +59,7 @@ def login_auth(request):
     username = request.POST.get('username','')
     password = request.POST.get('password','')
 
-    url='http://192.168.1.6:8081/login/loginHandler/'+username+'/'+password
+    url='http://192.168.1.18:8001/login/loginHandler/'+username+'/'+password
 
     # if resp.status_code!=200:
     #     raise ApiError(resp.status_code)
@@ -67,17 +67,26 @@ def login_auth(request):
     resp=requests.get(url)
     item = resp.json()
 
+    print(item['UserRole'])
+
     if item['UserRole']=="Developer":
+        #username = {'Ram'}
         return HttpResponseRedirect('/nfv/developer')
+        #return HttpResponseRedirect('/nfv/developer',{"username":username})
+        #return render(request, '/nfv/developer', {"username": username},content_type="application/xhtml+xml" )
     elif item['UserRole']=="admin":
+        #username = 'Ben'
+        #return HttpResponseRedirect('/nfv/admin' + '?username')
         return HttpResponseRedirect('/nfv/admin')
+      #  return render(request, '/nfv/admin', {"username": username},content_type="application/xhtml+xml" )
     elif item['UserRole']=="Enterprise":
         return HttpResponseRedirect('/nfv/enterprise')
     else:
         return HttpResponseRedirect('/nfv/invalid')
 
-def CreateVNF(request):
 
+def CreateVNF(request):
+    ip = 'http://192.168.1.18:8001'
     print("Create VNF")
 
     vnfName= request.POST.get('txtvnfName','')
@@ -86,7 +95,8 @@ def CreateVNF(request):
     vnfDef = request.POST.get('vnfDefinition','')
     vnfConfig = request.POST.get('Config','')
     vnfParam = request.POST.get('ParameterValuePoint','')
-
+    if imgLoc == '':
+        imgLoc = 'NA'
     # upload_api='http://192.168.1.6:8081/admin/uploadVNF/'
     #
     # imgLoc='/Users/cccuser/sample.txt'
@@ -100,41 +110,61 @@ def CreateVNF(request):
     #
     # print(item1)
 
-    print('UploadVNF success')
+    path = handle_uploaded_file(request.FILES['vnfDefinition'])
+    r = requests.post(ip + '/admin/toscaValidate', files={'path': open(path, 'rb')})
+    obj = r.json()
+    if obj['status'] != 'success':
+        messages.error(request, 'Invalid (' + request.FILES['vnfDefinition'].name + ') file - Not Compliant to TOSCA Standards')
+    else:
+        vnfDefinitionPath = obj['path']
+        vnfDefinitionName = request.FILES['vnfDefinition'].name
+        path = handle_uploaded_file(request.FILES['Config'])
+        r = requests.post(ip + '/admin/toscaValidate', files={'path': open(path, 'rb')})
+        obj = r.json()
+        if obj['status'] != 'success':
+            messages.error(request, 'Invalid (' + request.FILES['Config'].name + ') file - Not Compliant to TOSCA Standards.')
+        else:
+            configPath = obj['path']
+            configName = request.FILES['Config'].name
+            path = handle_uploaded_file(request.FILES['ParameterValuePoint'])
+            r = requests.post(ip + '/admin/toscaValidate', files={'path': open(path, 'rb')})
+            obj = r.json()
+            if obj['status'] != 'success':
+                messages.error(request, 'Invalid (' + request.FILES['ParameterValuePoint'].name + ') file - Not Compliant to TOSCA Standards.')
+            else:
+                parameterValuePointPath = obj['path']
+                parameterValuePointName = request.FILES['ParameterValuePoint'].name
+                path = handle_uploaded_file(request.FILES['ImageFile'])
+                r = requests.post(ip + '/admin/uploadImage', files={'path': open(path, 'rb')})
+                imagePath = obj['path']
+                imageName = request.FILES['ImageFile'].name
+                dev_api= ip + '/developer/create/'
 
-    dev_api= 'http://192.168.1.6:8081/developer/create/'
+                url=dev_api+vnfName+'/'+vnfDesc+'/'+imgLoc+'/'+vnfDefinitionName+'/'+configName+'/'+parameterValuePointName+ '/' + vnfDefinitionPath.replace('\\', '\\\\')+'/'+configPath.replace('\\', '\\\\')+'/'+parameterValuePointPath.replace('\\', '\\\\')+'/'+imagePath
 
-    url=dev_api+vnfName+'/'+vnfDesc+'/'+imgLoc+'/'+vnfDef+'/'+vnfConfig+'/'+vnfParam
+                print(url)
 
-    print(url)
+                resp=requests.get(url)
+                item = resp.json()
+                if item['CatalogId']!=None:
+                    print "Success"
+                    messages.error(request, 'Files Compliant with TOSCA Standards and catalog added successfully with ID:' + item['CatalogId'])
+                    return HttpResponseRedirect('/nfv/developer')
 
-    resp=requests.get(url)
-    item = resp.json()
 
-    if item['CatalogId']!=None:
-        print "Success"
-        return HttpResponseRedirect('/nfv/developer')
-
-def listVNF(request):
-
-    print("Listing VNF")
-
-    admin_api='http://192.168.1.6:8081/admin/listCatalog'
-
-    print(admin_api)
-    resp=requests.get(admin_api)
-    item = resp.json()
-    obj = item['catalogs']
-    for row in obj:
-        print row['catalog']
+    return HttpResponseRedirect('/nfv/developer')
 
 
 
-    print(str(obj))
-
-    return render(request, 'Admin.html' )
-
-
+def handle_uploaded_file(f):
+    print f.name
+    extension = f.name.split('.')[-1]
+    filename = f.name +`random.random()` + '.' + extension
+    path = 'C:\\'+ filename
+    with open(path, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+    return path
 
 
 
