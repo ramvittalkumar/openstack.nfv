@@ -43,7 +43,7 @@
 
             });
 
-            var approveApi = 'http://192.168.1.18:8001/admin/approve/[' + catalogs.join()+']';
+            var approveApi = 'http://192.168.1.10:8001/admin/approve/[' + catalogs.join()+']';
 
             alert(approveApi);
 
@@ -63,7 +63,7 @@
 
             });
 
-            var rejectApi = 'http://192.168.1.18:8001/admin/reject/[' + catalogs.join()+']';
+            var rejectApi = 'http://192.168.1.10:8001/admin/reject/[' + catalogs.join()+']';
 
             alert(rejectApi);
 
@@ -73,9 +73,50 @@
         });
         }
 
+        function loadCatalogFiles(obj, catalog_id)
+            {
+                var elem = $(obj).closest("td").prev();
+                 $("#ddlfileSelect").empty();
+                $("#ddlfileSelect").append("<option value='vnfd' selected=''>"+elem.find('span.vnfd').text()+"</option>");
+                $("#ddlfileSelect").append("<option value='vnf_cfg_filename' selected=''>"+elem.find('span.vnf_config').text()+"</option>");
+                $("#ddlfileSelect").append("<option value='vnf_param' selected=''>"+elem.find('span.vnf_param').text()+"</option>");
+                $("#myModal1").find(".catalogID").text(catalog_id);
+                populateFileContent(catalog_id, "vnf_param");
+            }
 
+        function getCatalogId(obj, catalog_id)
+            {
+               alert ('catalog id:'+catalog_id);
+               $("#myModal").find(".catalog_id").val(catalog_id);
+               alert('value set inside the catalogid');
+
+            }
+
+        function populateFileContent(catagoryId,fileType){
+            var catalogFileContentApi = 'http://192.168.1.10:8001/developer/displayFile/'+fileType+'/'+catagoryId
+            $.getJSON(catalogFileContentApi,function(catalogFile){
+                //alert(catalogFile.content);
+                 $("#txtContent").val(catalogFile.content);
+            });
+        }
         $(document).ready(function ()
      {
+        {% if messages %}
+            $("#statusModal").modal("show");
+        {% endif %}
+
+
+
+        $(".Preview").on("click",function(){
+            alert("here");
+        });
+
+        $("#ddlfileSelect").change(function(){
+            catalagId = $("#myModal1").find(".catalogID").text();
+            fileType = $(this).val();
+            populateFileContent(catalagId,fileType)
+        });
+
 
          $("#checkAll").click(function() {
 
@@ -86,7 +127,7 @@
             });
 
 
-            $.getJSON('http://192.168.1.18:8001/admin/listCatalog',function(CatalogResults){
+            $.getJSON('http://192.168.1.10:8001/admin/listCatalog',function(CatalogResults){
 
                /* var tr;
                         <th><input type="checkbox" name="chkhead" id="checkAll" > </th>
@@ -108,16 +149,16 @@
                      tr = $('<tr/>');
                      tr.append("<td align='center'>"+ "<input type='checkbox' name='name1' class='cbox' value='" + CatalogResults[i].CatalogId+ "' /> </td>");
 
-                     tr.append("<td style='display: none'>" + CatalogResults[i].CatalogId + "</td>");
+                     tr.append("<td style='display: none'> <span class ='catalogId'>" + CatalogResults[i].CatalogId + "</span></td>");
                      tr.append("<td align='center'>" + CatalogResults[i].CatalogName + "</td>");
                      tr.append("<td align='center'>" + CatalogResults[i].CatalogDesc + "</td>");
-                     tr.append("<td align='center'>" + CatalogResults[i].VNFD_Filename + "<br>"+ CatalogResults[i].VNF_Config_Filename + "<br>" + CatalogResults[i].VNF_Param_Filename + "</td>");
-                     tr.append("<td>" + "<a data-toggle='modal' data-target='#myModal1' href='#' id='Preview'>" +
+                     tr.append("<td align='center'> <span class='vnfd'>" + CatalogResults[i].VNFD_Filename + "</span><br><span class='vnf_config'>"+ CatalogResults[i].VNF_Config_Filename + "</span><br><span class='vnf_param'>" + CatalogResults[i].VNF_Param_Filename + "</span></td>");
+                         tr.append("<td>" + "<a data-toggle='modal' data-target='#myModal1' href='#' class='Preview' onclick='loadCatalogFiles(this, "+CatalogResults[i].CatalogId+")'>" +
                                 "<img src='{% static 'nfv_img/Preview.jpg' %}' height='25px' width='25px' style='border:groove' title='Preview' />"
                             + "</a>" +
                             "<img src='{% static 'nfv_img/download.png' %}' height='25px' width='25px' style='border:groove' title='Download' />"
                                 + "<a data-toggle='modal' data-target='#myModal' href='#' id='Upload'>" +
-                                "<img src='{% static 'nfv_img/upload.jpg' %}' height='25px' width='25px' style='border:groove' title='Upload' />"
+                                "<img src='{% static 'nfv_img/upload.jpg' %}' height='25px' width='25px' style='border:groove' title='Upload'  onclick='getCatalogId(this, "+CatalogResults[i].CatalogId+")' />"
                             + "</a>" +
                             "<img src='{% static 'nfv_img/btn_del.gif' %}' height='25px' width='25px' style='border:groove' title='Delete' />"
                             + "<img src='{% static 'nfv_img/Publish.png' %}' height='25px' width='25px' style='border:groove' title='Publish' />"
@@ -129,6 +170,8 @@
                 }
 
             });
+
+
 
         });
 
@@ -333,62 +376,7 @@
         </div>
         <br />
 
-        <div id="myModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header" style="background-color: #5E9EBF">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 style="color: whitesmoke; font-weight: bold;">Upload</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group" id="vnfDefinition">
-                            <label for="vnfDefinition" class="control-label">VNF Definition:</label>
-                            <input type="file" name="vnfDefinition" id="vnfDefinition" />
-                        </div>
-                        <div class="form-group">
-                            <label for="Config" class="control-label">Config:</label>
-                            <input type="file" name="Config" id="Config" />
-                        </div>
-                        <div class="form-group">
-                            <label for="ParameterValuePoint" class="control-label">Parameter Value Point:</label>
-                            <input type="file" name="ParameterValuePoint" id="ParameterValuePoint" />
-                        </div>
-                        <br />
-                        <div class="form-group">
-                            <button type="reset" id="resetUser" onclick="clearKnownUservalue()" class="btn btn-success">Reset</button>
-                            <button type="submit" id="submitUser" class="btn btn-success" onclick="AddKnownUserValid()">Submit</button>
-                            <label id="lblmessage" style="color: red; font-size: small" for="result"></label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div id="myModal1" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header" style="background-color: #5E9EBF">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 style="color: whitesmoke; font-weight: bold;">Preview</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group" id="ddlfile">
-                            <label for="ddlfile" class="control-label">Select File:</label>
-                            <select class="form-control" id="ddlfile" name='ddlfile'>
-                                <option selected value="1">CiscoCSR.ova</option>
-                                <option value="2">CiscoCSRVNFDefinition.yaml</option>
-                            </select>
-                        </div>                        
-                        <div class="form-group">
-                            <label for="txtContent" class="control-label">Content:</label>
-                            <textarea id="txtContent" name='txtContent' class="form-control" style="height: 200px;" readonly>                            
-                            </textarea>
-                        </div>
-                        <br />                       
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="form-group" align="center">
             <button type="approve" id="btnApprove" value="approve" class="btn btn-success" onclick="Approve()">Approve</button>
             <button type="reject" value="btnReject" value="reject" class="btn btn-success" onclick="Reject()">Reject </button>
@@ -407,6 +395,97 @@
     </script>-->
 
  </form>
+
+<div id="myModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <form id="uploadCatalogForm" action="/nfv/uploadVNF/" method="POST" enctype="multipart/form-data">{% csrf_token %}
+        <input type="text" name="catalog_id" class="catalog_id" style="display:hidden"> </input>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #5E9EBF">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 style="color: whitesmoke; font-weight: bold;">Upload</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group" id="vnfDefinitionId">
+                        <label for="vnfDefinition" class="control-label">VNF Definition:</label>
+                        <input type="file" name="vnfDefinition" id="vnfDefinition"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="Config" class="control-label">Config:</label>
+                        <input type="file" name="Config" id="Config"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="ParameterValuePoint" class="control-label">Parameter Value Point:</label>
+                        <input type="file" name="ParameterValuePoint" id="ParameterValuePoint"/>
+                    </div>
+                    <br/>
+                    <div class="form-group">
+                        <button type="reset" id="resetUser" onclick="clearKnownUservalue()" class="btn btn-success">
+                            Reset
+                        </button>
+                        <input type="submit" class="btn btn-success" value="Submit"/>
+                        <label id="lblmessage" style="color: red; font-size: small" for="result"></label>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="myModal1" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <span class="catalogID"></span>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #5E9EBF">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 style="color: whitesmoke; font-weight: bold;">Preview</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" id="ddlfile">
+                    <label for="ddlfile" class="control-label">Select File:</label>
+                    <select class="form-control" id="ddlfileSelect" name='ddlfile'>
+
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtContent" class="control-label">Content:</label>
+                            <textarea id="txtContent" name='txtContent' class="form-control" style="height: 200px;"
+                                      readonly>
+                            </textarea>
+                </div>
+                <br/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="statusModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Status</h4>
+            </div>
+            <div class="modal-body">
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
 </body>
 
 </html>

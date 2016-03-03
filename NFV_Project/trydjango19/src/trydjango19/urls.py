@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^nfv/admin/nfv/listVNF/$', "nfv.views.listVNF"),
     url(r'^nfv/invalid/$', "nfv.views.invalid_login"),
     url(r'^nfv/logout/$', "nfv.views.logout"),
+    url(r'^nfv/uploadVNF/$', "nfv.views.uploadVNF"),
     url(r'^nfv/developer/$', "nfv.views.developer"),
     url(r'^nfv/admin/$', "nfv.views.admin"),
     url(r'^nfv/enterprise/$', "nfv.views.enterprise"),

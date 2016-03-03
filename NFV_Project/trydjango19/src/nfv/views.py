@@ -39,6 +39,7 @@ def namedtuplefetchall(cursor):
 #     # for row in data :
 #     #     print row[0].User_Id
 #     #     row = cursor.fetchone()
+
 #
 #     cursor.close()
 #
@@ -59,15 +60,12 @@ def login_auth(request):
     username = request.POST.get('username','')
     password = request.POST.get('password','')
 
-    url='http://192.168.1.18:8001/login/loginHandler/'+username+'/'+password
-
-    # if resp.status_code!=200:
-    #     raise ApiError(resp.status_code)
+    url = 'http://192.168.1.10:8001/login/loginHandler/' + username + '/' + password
 
     resp=requests.get(url)
     item = resp.json()
 
-    print(item['UserRole'])
+    print('User Role:' + item['UserRole'])
 
     if item['UserRole']=="Developer":
         #username = {'Ram'}
@@ -86,81 +84,170 @@ def login_auth(request):
 
 
 def CreateVNF(request):
-    ip = 'http://192.168.1.18:8001'
+    ip = 'http://192.168.1.10:8001'
     print("Create VNF")
 
     vnfName= request.POST.get('txtvnfName','')
     vnfDesc = request.POST.get('txtDescription','')
     imgLoc = request.POST.get('txtImageLocation','')
-    vnfDef = request.POST.get('vnfDefinition','')
-    vnfConfig = request.POST.get('Config','')
-    vnfParam = request.POST.get('ParameterValuePoint','')
+    # vnfDef = request.POST.get('vnfDefinition','')
+    # vnfConfig = request.POST.get('Config','')
+    # vnfParam = request.POST.get('ParameterValuePoint','')
     if imgLoc == '':
         imgLoc = 'NA'
-    # upload_api='http://192.168.1.6:8081/admin/uploadVNF/'
-    #
-    # imgLoc='/Users/cccuser/sample.txt'
-    #
-    # finalurl=upload_api+imgLoc
-    #
-    # print(finalurl)
-    #
-    # resp1= requests.get(finalurl)
-    # item1=resp1.json()
-    #
-    # print(item1)
 
-    path = handle_uploaded_file(request.FILES['vnfDefinition'])
-    r = requests.post(ip + '/admin/toscaValidate', files={'path': open(path, 'rb')})
-    obj = r.json()
-    if obj['status'] != 'success':
-        messages.error(request, 'Invalid (' + request.FILES['vnfDefinition'].name + ') file - Not Compliant to TOSCA Standards')
+    if 'ImageFile' in request.FILES:
+        path = handle_uploaded_file(request.FILES['ImageFile'])
+        r = requests.post(ip + '/admin/uploadImage', files={'path': open(path, 'rb')})
+        obj = r.json()
+        imagePath = obj['path']
+        imageName = request.FILES['ImageFile'].name
     else:
-        vnfDefinitionPath = obj['path']
-        vnfDefinitionName = request.FILES['vnfDefinition'].name
+        messages.error(request, 'Please provide image file')
+        return HttpResponseRedirect('/nfv/developer')
+
+    if 'vnfDefinition' in request.FILES:
+        path = handle_uploaded_file(request.FILES['vnfDefinition'])
+        r = requests.post(ip + '/admin/toscaValidate', files={'path': open(path, 'rb')})
+        obj = r.json()
+        if obj['status'] != 'success':
+            messages.error(request, 'Invalid (' + request.FILES[
+                'vnfDefinition'].name + ') file - Not Compliant to TOSCA Standards')
+            return HttpResponseRedirect('/nfv/developer')
+        else:
+            r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
+            obj = r.json()
+            vnfDefinitionPath = obj['path']
+            vnfDefinitionName = request.FILES['vnfDefinition'].name
+    else:
+        vnfDefinitionPath = 'None'
+        vnfDefinitionName = 'None'
+
+    if 'Config' in request.FILES:
         path = handle_uploaded_file(request.FILES['Config'])
         r = requests.post(ip + '/admin/toscaValidate', files={'path': open(path, 'rb')})
         obj = r.json()
         if obj['status'] != 'success':
             messages.error(request, 'Invalid (' + request.FILES['Config'].name + ') file - Not Compliant to TOSCA Standards.')
+            return HttpResponseRedirect('/nfv/developer')
         else:
+            r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
+            obj = r.json()
             configPath = obj['path']
             configName = request.FILES['Config'].name
-            path = handle_uploaded_file(request.FILES['ParameterValuePoint'])
-            r = requests.post(ip + '/admin/toscaValidate', files={'path': open(path, 'rb')})
+    else:
+        configPath = 'None'
+        configName = 'None'
+
+    if 'ParameterValuePoint' in request.FILES:
+        path = handle_uploaded_file(request.FILES['ParameterValuePoint'])
+        r = requests.post(ip + '/admin/toscaValidate', files={'path': open(path, 'rb')})
+        obj = r.json()
+        if obj['status'] != 'success':
+            messages.error(request, 'Invalid (' + request.FILES[
+                'ParameterValuePoint'].name + ') file - Not Compliant to TOSCA Standards.')
+            return HttpResponseRedirect('/nfv/developer')
+        else:
+            r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
             obj = r.json()
-            if obj['status'] != 'success':
-                messages.error(request, 'Invalid (' + request.FILES['ParameterValuePoint'].name + ') file - Not Compliant to TOSCA Standards.')
-            else:
-                parameterValuePointPath = obj['path']
-                parameterValuePointName = request.FILES['ParameterValuePoint'].name
-                path = handle_uploaded_file(request.FILES['ImageFile'])
-                r = requests.post(ip + '/admin/uploadImage', files={'path': open(path, 'rb')})
-                imagePath = obj['path']
-                imageName = request.FILES['ImageFile'].name
-                dev_api= ip + '/developer/create/'
+            parameterValuePointPath = obj['path']
+            parameterValuePointName = request.FILES['ParameterValuePoint'].name
+    else:
+        parameterValuePointPath = 'None'
+        parameterValuePointName = 'None'
 
-                url=dev_api+vnfName+'/'+vnfDesc+'/'+imgLoc+'/'+vnfDefinitionName+'/'+configName+'/'+parameterValuePointName+ '/' + vnfDefinitionPath.replace('\\', '\\\\')+'/'+configPath.replace('\\', '\\\\')+'/'+parameterValuePointPath.replace('\\', '\\\\')+'/'+imagePath
+    dev_api = ip + '/developer/create/'
 
-                print(url)
+    url = dev_api + vnfName + '/' + vnfDesc + '/' + imgLoc + '/' + vnfDefinitionName + '/' + configName + '/' + parameterValuePointName + '/' + vnfDefinitionPath.replace(
+        '\\', '\\\\') + '/' + configPath.replace('\\', '\\\\') + '/' + parameterValuePointPath.replace('\\',
+                                                                                                       '\\\\') + '/' + imagePath.replace(
+        '\\', '\\\\')
 
-                resp=requests.get(url)
-                item = resp.json()
-                if item['CatalogId']!=None:
-                    print "Success"
-                    messages.error(request, 'Files Compliant with TOSCA Standards and catalog added successfully with ID:' + item['CatalogId'])
-                    return HttpResponseRedirect('/nfv/developer')
-
+    resp = requests.get(url)
+    item = resp.json()
+    if item['CatalogId'] != None:
+        print "Success"
+        messages.error(request, 'Files Compliant with TOSCA Standards and catalog added successfully with ID:' + item[
+            'CatalogId'])
+        return HttpResponseRedirect('/nfv/developer')
 
     return HttpResponseRedirect('/nfv/developer')
 
+
+def uploadVNF(request):
+    ip = 'http://192.168.1.10:8001'
+    catalogId = request.POST.get('catalog_id', '')
+    print("Upload VNF for catalog:" + catalogId)
+    if 'vnfDefinition' in request.FILES:
+        path = handle_uploaded_file(request.FILES['vnfDefinition'])
+        print ip + '/admin/toscaValidate'
+        r = requests.post(ip + '/admin/toscaValidate', files={'path': open(path, 'rb')})
+        obj = r.json()
+        if obj['status'] != 'success':
+            messages.error(request, 'Invalid (' + request.FILES[
+                'vnfDefinition'].name + ') file - Not Compliant to TOSCA Standards')
+            return HttpResponseRedirect('/nfv/developer')
+        else:
+            r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
+            obj = r.json()
+            vnfDefinitionPath = obj['path']
+            vnfDefinitionName = request.FILES['vnfDefinition'].name
+    else:
+        vnfDefinitionPath = 'None'
+        vnfDefinitionName = 'None'
+
+    if 'Config' in request.FILES:
+        path = handle_uploaded_file(request.FILES['Config'])
+        r = requests.post(ip + '/admin/toscaValidate', files={'path': open(path, 'rb')})
+        obj = r.json()
+        if obj['status'] != 'success':
+            messages.error(request,
+                           'Invalid (' + request.FILES['Config'].name + ') file - Not Compliant to TOSCA Standards.')
+            return HttpResponseRedirect('/nfv/developer')
+        else:
+            r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
+            obj = r.json()
+            configPath = obj['path']
+            configName = request.FILES['Config'].name
+    else:
+        configPath = 'None'
+        configName = 'None'
+
+    if 'ParameterValuePoint' in request.FILES:
+        path = handle_uploaded_file(request.FILES['ParameterValuePoint'])
+        r = requests.post(ip + '/admin/toscaValidate', files={'path': open(path, 'rb')})
+        obj = r.json()
+        if obj['status'] != 'success':
+            messages.error(request, 'Invalid (' + request.FILES[
+                'ParameterValuePoint'].name + ') file - Not Compliant to TOSCA Standards.')
+            return HttpResponseRedirect('/nfv/developer')
+        else:
+            r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
+            obj = r.json()
+            parameterValuePointPath = obj['path']
+            parameterValuePointName = request.FILES['ParameterValuePoint'].name
+    else:
+        parameterValuePointPath = 'None'
+        parameterValuePointName = 'None'
+
+    dev_api = ip + '/developer/uploadFile/'
+
+    url = dev_api + catalogId + '/' + vnfDefinitionName + '/' + vnfDefinitionPath.replace('\\',
+                                                                                          '\\\\') + '/' + configName + '/' + configPath.replace(
+        '\\', '\\\\') + '/' + parameterValuePointName + '/' + parameterValuePointPath.replace('\\', '\\\\')
+    print "**************************************************************************"
+    print url
+    resp = requests.get(url)
+    item = resp.json()
+    messages.error(request, 'Files uploaded successfully')
+    return HttpResponseRedirect('/nfv/admin')
 
 
 def handle_uploaded_file(f):
     print f.name
     extension = f.name.split('.')[-1]
     filename = f.name +`random.random()` + '.' + extension
-    path = 'C:\\'+ filename
+    path = '\\home\\rdk' + filename
     with open(path, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
