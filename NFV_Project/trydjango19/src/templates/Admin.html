@@ -43,7 +43,7 @@
 
             });
 
-            var approveApi = 'http://192.168.1.10:8001/admin/approve/[' + catalogs.join()+']';
+            var approveApi = 'http://192.168.1.11:8001/admin/approve/[' + catalogs.join()+']';
 
             alert(approveApi);
 
@@ -63,7 +63,7 @@
 
             });
 
-            var rejectApi = 'http://192.168.1.10:8001/admin/reject/[' + catalogs.join()+']';
+            var rejectApi = 'http://192.168.1.11:8001/admin/reject/[' + catalogs.join()+']';
 
             alert(rejectApi);
 
@@ -84,16 +84,53 @@
                 populateFileContent(catalog_id, "vnf_param");
             }
 
-        function getCatalogId(obj, catalog_id)
-            {
-               alert ('catalog id:'+catalog_id);
-               $("#myModal").find(".catalog_id").val(catalog_id);
-               alert('value set inside the catalogid');
+        function getCatalogId(obj, catalog_id){
+           $("#myModal").find(".catalog_id").val(catalog_id);
+        }
 
+        function popDownload(obj, catalog_id){
+            $("#downloadModal").find(".catalogID").text(catalog_id);
+            var elem = $(obj).closest("td").prev();
+            $("#downloadModal").find(".checkboxGroup").empty();
+            $("#downloadModal").find(".downloadButton").show();
+            if(elem.find('span.vnfd').text() != "None"){
+                $("#downloadModal").find(".checkboxGroup").append('<input type="checkbox" class="file" value="vnfDefinition">'+elem.find('span.vnfd').text()+'<br/>');
             }
 
+            if(elem.find('span.vnf_config').text() != "None"){
+                $("#downloadModal").find(".checkboxGroup").append('<input type="checkbox" class="file" value="Config">'+elem.find('span.vnf_config').text()+'<br/>');
+            }
+
+            if(elem.find('span.vnf_param').text() != "None"){
+                $("#downloadModal").find(".checkboxGroup").append('<input type="checkbox" class="file" value="ParameterValuePoint">'+elem.find('span.vnf_param').text()+'<br/>');
+            }
+
+            $("#myModal1").find(".catalogID").text(catalog_id);
+
+            if(elem.find('span.vnfd').text() == "None" && elem.find('span.vnf_config').text() == "None" && elem.find('span.vnf_param').text() == "None"){
+                $("#downloadModal").find(".checkboxGroup").append("No Files available for this catalog");
+                $("#downloadModal").find(".downloadButton").hide();
+            }
+            $("#downloadModal").modal("show");
+        }
+
+        function downloadFiles(){
+            catalagId = $("#downloadModal").find(".catalogID").text();
+            if($("#downloadModal").find(".file:checked").length == 0){
+                alert("please select atleast one file");
+            }else{
+                url="http://192.168.1.11:8001/admin/downloadFile?catalogId="+catalagId;
+                $("#downloadModal").find(".file:checked").each(function(){
+                    url+="&"+$(this).val()+"=true"
+                });
+                alert(url);
+                window.location = url;
+            }
+        }
+
+
         function populateFileContent(catagoryId,fileType){
-            var catalogFileContentApi = 'http://192.168.1.10:8001/developer/displayFile/'+fileType+'/'+catagoryId
+            var catalogFileContentApi = 'http://192.168.1.11:8001/developer/displayFile/'+fileType+'/'+catagoryId
             $.getJSON(catalogFileContentApi,function(catalogFile){
                 //alert(catalogFile.content);
                  $("#txtContent").val(catalogFile.content);
@@ -127,7 +164,7 @@
             });
 
 
-            $.getJSON('http://192.168.1.10:8001/admin/listCatalog',function(CatalogResults){
+            $.getJSON('http://192.168.1.11:8001/admin/listCatalog',function(CatalogResults){
 
                /* var tr;
                         <th><input type="checkbox" name="chkhead" id="checkAll" > </th>
@@ -156,7 +193,7 @@
                          tr.append("<td>" + "<a data-toggle='modal' data-target='#myModal1' href='#' class='Preview' onclick='loadCatalogFiles(this, "+CatalogResults[i].CatalogId+")'>" +
                                 "<img src='{% static 'nfv_img/Preview.jpg' %}' height='25px' width='25px' style='border:groove' title='Preview' />"
                             + "</a>" +
-                            "<img src='{% static 'nfv_img/download.png' %}' height='25px' width='25px' style='border:groove' title='Download' />"
+                            "<img src='{% static 'nfv_img/download.png' %}' height='25px' width='25px' style='border:groove' title='Download' onclick='popDownload(this, "+CatalogResults[i].CatalogId+")'/>"
                                 + "<a data-toggle='modal' data-target='#myModal' href='#' id='Upload'>" +
                                 "<img src='{% static 'nfv_img/upload.jpg' %}' height='25px' width='25px' style='border:groove' title='Upload'  onclick='getCatalogId(this, "+CatalogResults[i].CatalogId+")' />"
                             + "</a>" +
@@ -456,6 +493,25 @@
                             </textarea>
                 </div>
                 <br/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="downloadModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <span class="catalogID"></span>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #5E9EBF">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 style="color: whitesmoke; font-weight: bold;">Preview</h4>
+            </div>
+            <div class="modal-body">
+                <div class="checkboxGroup">
+                </div>
+                <button onclick="downloadFiles()" class="btn btn-success downloadButton">
+                    Download
+                </button>
             </div>
         </div>
     </div>
