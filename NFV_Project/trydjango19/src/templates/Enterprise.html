@@ -3,7 +3,7 @@
 
 <html>
 <head>
-    <title>User Details</title>
+    <title>Catalog Details</title>
     
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
     integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -131,6 +131,65 @@
         }
     </style>
 
+    <script>
+    $(document).ready(function (){
+        $.getJSON('http://192.168.1.8:8001/admin/listCatalog',function(CatalogResults){
+            table = $("#EnterpriseDetails").find("tbody");
+            columnCount = 0;
+            for (var i = 0; i < CatalogResults.length; i++){
+                if(columnCount % 3 == 0){
+                    r = '<tr></tr>';
+                    table.append(r);
+                }
+                columnCount++;
+
+                column = '<td>'
+                        +'  <div align="center">'
+                        +'      <div align="left" class="thumbnail" style="background-color: #bcd9e1; overflow: auto; border: groove; width:90% ">'
+                        +'          <h5><span class="label label-success">VNF Name: </span><span style="font-size:smaller"> '+ CatalogResults[i].CatalogName +' </span> </h5>'
+                        +'          <h5>'
+                        +'              <span class="label label-success">Description: </span>'
+                        +'                  <textarea id="txtContent" name="txtContent" class="form-control" style="height: 55px; font-size: smaller" readonly> '+ CatalogResults[i].CatalogDesc +'</textarea>'
+                        +'          </h5>'
+                        +'          <h5><span class="label label-success">Status: </span><span style="font-size:smaller"> Approved </span> </h5>'
+                        +'          <a onclick="loadCatalogFiles(this, '+CatalogResults[i].CatalogId+')" href="#" id="Upload">'
+                        +'              <img src="{% static "nfv_img/Deploy.jpg" %}" height="50px" width="50px" title="Deploy" align="right" />'
+                        +'          </a>'
+                        +'      </div>'
+                        +'  </div>'
+                        +'</td>';
+                table.find("tr:last").append(column);
+
+                //table.append(tr);
+
+            }
+
+            if(columnCount % 3 != 0){
+                table = $("#EnterpriseDetails").find("tbody");
+                while(true){
+                    table.find("tr:last").append("<td></td>");
+                    if(columnCount % 3 == 0){
+                        break;
+                    }
+                    columnCount++;
+                }
+            }
+
+            $('#EnterpriseDetails').DataTable({
+                "bPaginate": true,
+                "bFilter": true,
+                "bInfo": true,
+                "bSort": false,
+                "bDestroy": true,
+                "lengthMenu": [[2, 4, 8, -1], [2, 4, 8, "All"]]
+            });
+
+
+            });
+    });
+
+    </script>
+
 </head>
 <body>
 
@@ -146,7 +205,7 @@
                         <span id="loginuserimage" class="glyphicon glyphicon-user" style="font-size: x-small; border: thin; color: #006699; text-align: right; float: right; "></span>
                         <p style="font-size: small; text-align:right;float:right;">&nbsp</p>
                         <label style="font-size: x-small; color: #006699; text-align: right; float: right; " for="username" id="lblLoginUsrName"></label>
-                        <p style="font-size: x-small; text-align: right; float: right; color: black; "> Welcome &nbsp {{full_name}}</p>
+                        <p style="font-size: x-small; text-align: right; float: right; color: black; "> Welcome {{ request.session.name }}</p>
                     </h1>
                 </div>
             </div>
@@ -187,102 +246,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr >
-                        <td>
-                            <div align="center">
-                                <div align="left" class="thumbnail" style="background-color: #bcd9e1; overflow: auto; border: groove; width:90% ">
-                                    <h5><span class="label label-success">VNF Name: </span><span style="font-size:smaller"> OpenWRT </span> </h5>
-                                    <h5>
-                                        <span class="label label-success">Description: </span>
-                                        <textarea id="txtContent" name='txtContent' class="form-control" style="height: 55px; font-size: smaller" readonly> Open source firmware that provides router and firewall capabilities</textarea>
-                                    </h5>
-                                    <h5><span class="label label-success">Status: </span><span style="font-size:smaller"> Deployed </span> </h5>
-                                    <a data-toggle="modal" data-target="#myModal" href="#" id="Upload">
-                                        <img src="{% static "nfv_img/Deploy.jpg" %}" height="50px" width="50px" title="Deploy" align="right" />
-                                    </a>
-                                </div>
-                            </div>
-                        </td>
 
-                        <td>
-                            <div align="center">
-                                <div align="left" class="thumbnail" style="background-color: #bcd9e1; overflow: auto; border: groove; width:90% ">
-                                    <h5><span class="label label-success">VNF Name: </span><span style="font-size:smaller"> Cisco CSR </span> </h5>
-                                    <h5>
-                                        <span class="label label-success">Description: </span>
-                                        <textarea id="txtContent" name='txtContent' class="form-control" style="height: 55px; font-size: smaller" readonly> Cisco CSR 1000v virtual router</textarea>
-                                    </h5>
-                                    <h5><span class="label label-success">Status: </span><span style="font-size:smaller"> Published </span> </h5>
-                                    <a data-toggle="modal" data-target="#myModal" href="#" id="Upload">
-                                        <img src="{% static "nfv_img/Deploy.jpg" %}" height="50px" width="50px" title="Deploy" align="right" />
-                                    </a>
-                                </div>
-                            </div>
-                        </td>
-
-                        <td>
-                            <div align="center">
-                                <div align="left" class="thumbnail" style="background-color: #bcd9e1; overflow: auto; border: groove; width:90% ">
-                                    <h5><span class="label label-success">VNF Name: </span><span style="font-size:smaller"> OpenWRT </span> </h5>
-                                    <h5>
-                                        <span class="label label-success">Description: </span>
-                                        <textarea id="txtContent" name='txtContent' class="form-control" style="height: 55px; font-size: smaller" readonly> Open source firmware that provides router and firewall capabilities</textarea>
-                                    </h5>
-                                    <h5><span class="label label-success">Status: </span><span style="font-size:smaller"> Deployed </span> </h5>
-                                    <a data-toggle="modal" data-target="#myModal" href="#" id="Upload">
-                                        <img src="{% static "nfv_img/Deploy.jpg" %}" height="50px" width="50px" title="Deploy" align="right" />
-                                    </a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div align="center">
-                                <div align="left" class="thumbnail" style="background-color: #bcd9e1; overflow: auto; border: groove; width:90% ">
-                                    <h5><span class="label label-success">VNF Name: </span><span style="font-size:smaller"> Cisco CSR </span> </h5>
-                                    <h5>
-                                        <span class="label label-success">Description: </span>
-                                        <textarea id="txtContent" name='txtContent' class="form-control" style="height: 55px; font-size: smaller" readonly> Cisco CSR 1000v virtual router</textarea>
-                                    </h5>
-                                    <h5><span class="label label-success">Status: </span><span style="font-size:smaller"> Published </span> </h5>
-                                    <a data-toggle="modal" data-target="#myModal" href="#" id="Upload">
-                                        <img src="{% static "nfv_img/Deploy.jpg" %}" height="50px" width="50px" title="Deploy" align="right" />
-                                    </a>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div align="center">
-                                <div align="left" class="thumbnail" style="background-color: #bcd9e1; overflow: auto; border: groove; width:90% ">
-                                    <h5><span class="label label-success">VNF Name: </span><span style="font-size:smaller"> Cisco CSR </span> </h5>
-                                    <h5>
-                                        <span class="label label-success">Description: </span>
-                                        <textarea id="txtContent" name='txtContent' class="form-control" style="height: 55px; font-size: smaller" readonly> Cisco CSR 1000v virtual router</textarea>
-                                    </h5>
-                                    <h5><span class="label label-success">Status: </span><span style="font-size:smaller"> Published </span> </h5>
-                                    <a data-toggle="modal" data-target="#myModal" href="#" id="Upload">
-                                        <img src="{% static "nfv_img/Deploy.jpg" %}" height="50px" width="50px" title="Deploy" align="right" />
-                                    </a>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div align="center">
-                                <div align="left" class="thumbnail" style="background-color: #bcd9e1; overflow: auto; border: groove; width:90% ">
-                                    <h5><span class="label label-success">VNF Name: </span><span style="font-size:smaller"> Cisco CSR </span> </h5>
-                                    <h5>
-                                        <span class="label label-success">Description: </span>
-                                        <textarea id="txtContent" name='txtContent' class="form-control" style="height: 55px; font-size: smaller" readonly> Cisco CSR 1000v virtual router</textarea>
-                                    </h5>
-                                    <h5><span class="label label-success">Status: </span><span style="font-size:smaller"> Published </span> </h5>
-                                    <a data-toggle="modal" data-target="#myModal" href="#" id="Upload">
-                                        <img src="{% static "nfv_img/Deploy.jpg" %}" height="50px" width="50px" title="Deploy" align="right" />
-                                    </a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
                 </tbody>
             </table>
         </div>
@@ -324,16 +288,7 @@
         </div>
     </div>
     <script>
-        $(document).ready(function () {
-            $('#EnterpriseDetails').DataTable({
-                "bPaginate": true,
-                "bFilter": true,
-                "bInfo": true,
-                "bSort": false,
-                "bDestroy": true,
-                "lengthMenu": [[2, 4, 8, -1], [2, 4, 8, "All"]]
-            });
-        });
+
     </script>
    
 </body>

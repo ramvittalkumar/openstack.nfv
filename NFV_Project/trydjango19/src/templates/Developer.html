@@ -165,7 +165,7 @@
                         <span id="loginuserimage" class="glyphicon glyphicon-user" style="font-size: smaller; border: thin; color: #006699; text-align: right; float: right; "></span>
                         <p style="font-size: small; text-align:right;float:right;">&nbsp</p>
                         <label style="font-size: x-small; color: #006699; text-align: right; float: right; " for="username" id="lblLoginUsrName"></label>
-                        <p style="font-size: smaller; text-align: right; float: right; color: #006699; "> Welcome &nbsp Ram </p>
+                        <p style="font-size: smaller; text-align: right; float: right; color: #006699; "> Welcome {{ request.session.name }}</p>
                     </h1>
                 </div>
             </div>
@@ -208,17 +208,17 @@
             <div class="form-group">
                 <label for="ddlImageSource" class="control-label">Image Source:</label>
                 <select class="form-control" id="ddlImageSource" name='ddlImageSource' onchange="ImageSourceChange();">
-                    <option selected value="1">Image Location</option>
-                    <option value="2">Image File</option> 
+                    <option selected value="2">Image File</option>
+                    <option value="1">Image Location</option>
                 </select>
             </div>
-            <div id="ImageFile" style="display:none">
+            <div id="ImageFile">
                 <div class="form-group">
                     <label for="txtImageFile" class="control-label">Image File:</label>                   
                     <input type="file" name="ImageFile" id="ImageFile" />
                 </div>
             </div>
-            <div id="ImageLocation">
+            <div id="ImageLocation" style="display:none">
                 <div class="form-group">
                     <label for="ImageLocation" class="control-label">Image Location:</label>
                     <input type="text" class="form-control" id="txtImageLocation" name='txtImageLocation' />                  

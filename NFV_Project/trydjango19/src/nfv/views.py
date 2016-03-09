@@ -60,31 +60,34 @@ def login_auth(request):
     username = request.POST.get('username','')
     password = request.POST.get('password','')
 
-    url = 'http://192.168.1.10:8001/login/loginHandler/' + username + '/' + password
+    url = 'http://192.168.1.8:8001/login/loginHandler/' + username + '/' + password
 
     resp=requests.get(url)
     item = resp.json()
 
     print('User Role:' + item['UserRole'])
-
+    print item
     if item['UserRole']=="Developer":
         #username = {'Ram'}
+        request.session['name'] = item['UserName']
         return HttpResponseRedirect('/nfv/developer')
         #return HttpResponseRedirect('/nfv/developer',{"username":username})
         #return render(request, '/nfv/developer', {"username": username},content_type="application/xhtml+xml" )
     elif item['UserRole']=="admin":
         #username = 'Ben'
         #return HttpResponseRedirect('/nfv/admin' + '?username')
+        request.session['name'] = item['UserName']
         return HttpResponseRedirect('/nfv/admin')
       #  return render(request, '/nfv/admin', {"username": username},content_type="application/xhtml+xml" )
-    elif item['UserRole']=="Enterprise":
+    elif item['UserRole']=="enterprise":
+        request.session['name'] = item['UserName']
         return HttpResponseRedirect('/nfv/enterprise')
     else:
         return HttpResponseRedirect('/nfv/invalid')
 
 
 def CreateVNF(request):
-    ip = 'http://192.168.1.10:8001'
+    ip = 'http://192.168.1.8:8001'
     print("Create VNF")
 
     vnfName= request.POST.get('txtvnfName','')
@@ -175,7 +178,7 @@ def CreateVNF(request):
 
 
 def uploadVNF(request):
-    ip = 'http://192.168.1.10:8001'
+    ip = 'http://192.168.1.8:8001'
     catalogId = request.POST.get('catalog_id', '')
     print("Upload VNF for catalog:" + catalogId)
     if 'vnfDefinition' in request.FILES:
@@ -247,7 +250,7 @@ def handle_uploaded_file(f):
     print f.name
     extension = f.name.split('.')[-1]
     filename = f.name +`random.random()` + '.' + extension
-    path = '\\home\\rdk' + filename
+    path = '/home/rdk/' + filename
     with open(path, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
@@ -293,20 +296,36 @@ def invalid_login(request):
     return render_to_response('Invalid.html')
 
 def logout(request):
+    del request.session['name']
     auth.logout(request)
     return render_to_response('logout.html')
 
 def developer(request):
     #return render_to_response('Developer.html', {'full_name': request.user.first_name})
-    return render_to_response('Developer.html',context_instance=RequestContext(request))
+    if 'name' in request.session:
+        return render_to_response('Developer.html',context_instance=RequestContext(request))
+    else:
+        c = {}
+        c.update(csrf(request))
+        return render_to_response('login.html', c)
 
 def admin(request):
     #return render_to_response('Admin.html', {'full_name': request.user.first_name})
-    return render_to_response('Admin.html', context_instance=RequestContext(request))
+    if 'name' in request.session:
+        return render_to_response('Admin.html', context_instance=RequestContext(request))
+    else:
+        c = {}
+        c.update(csrf(request))
+        return render_to_response('login.html', c)
 
 def enterprise(request):
     #return render_to_response('Enterprise.html', {'full_name': request.user.first_name})
-    return render_to_response('Enterprise.html', context_instance=RequestContext(request))
+    if 'name' in request.session:
+        return render_to_response('Enterprise.html', context_instance=RequestContext(request))
+    else:
+        c = {}
+        c.update(csrf(request))
+        return render_to_response('login.html', c)
 
 
 

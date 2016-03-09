@@ -43,7 +43,7 @@
 
             });
 
-            var approveApi = 'http://192.168.1.11:8001/admin/approve/[' + catalogs.join()+']';
+            var approveApi = 'http://192.168.1.8:8001/admin/approve/[' + catalogs.join()+']';
 
             alert(approveApi);
 
@@ -63,7 +63,7 @@
 
             });
 
-            var rejectApi = 'http://192.168.1.11:8001/admin/reject/[' + catalogs.join()+']';
+            var rejectApi = 'http://192.168.1.8:8001/admin/reject/[' + catalogs.join()+']';
 
             alert(rejectApi);
 
@@ -119,7 +119,7 @@
             if($("#downloadModal").find(".file:checked").length == 0){
                 alert("please select atleast one file");
             }else{
-                url="http://192.168.1.11:8001/admin/downloadFile?catalogId="+catalagId;
+                url="http://192.168.1.8:8001/admin/downloadFile?catalogId="+catalagId;
                 $("#downloadModal").find(".file:checked").each(function(){
                     url+="&"+$(this).val()+"=true"
                 });
@@ -130,7 +130,7 @@
 
 
         function populateFileContent(catagoryId,fileType){
-            var catalogFileContentApi = 'http://192.168.1.11:8001/developer/displayFile/'+fileType+'/'+catagoryId
+            var catalogFileContentApi = 'http://192.168.1.8:8001/developer/displayFile/'+fileType+'/'+catagoryId
             $.getJSON(catalogFileContentApi,function(catalogFile){
                 //alert(catalogFile.content);
                  $("#txtContent").val(catalogFile.content);
@@ -164,7 +164,7 @@
             });
 
 
-            $.getJSON('http://192.168.1.11:8001/admin/listCatalog',function(CatalogResults){
+            $.getJSON('http://192.168.1.8:8001/admin/listCatalog',function(CatalogResults){
 
                /* var tr;
                         <th><input type="checkbox" name="chkhead" id="checkAll" > </th>
@@ -330,7 +330,7 @@
                         <span id="loginuserimage" class="glyphicon glyphicon-user" style="font-size: x-small; border: thin; color: #006699; text-align: right; float: right; "></span>
                         <p style="font-size: small; text-align:right;float:right;">&nbsp</p>
                         <label style="font-size: x-small; color: #006699; text-align: right; float: right; " for="username" id="lblLoginUsrName"></label>
-                        <p style="font-size: smaller; text-align: right; float: right; color: #006699; "> Welcome &nbsp Ben</p>
+                        <p style="font-size: smaller; text-align: right; float: right; color: #006699; "> Welcome {{ request.session.name }}</p>
                     </h1>
                 </div>
             </div>
