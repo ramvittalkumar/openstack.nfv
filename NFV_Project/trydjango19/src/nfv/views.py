@@ -13,6 +13,7 @@ from django.shortcuts import render
 import json
 import requests
 import random
+import urllib
 
 
 def namedtuplefetchall(cursor):
@@ -61,7 +62,7 @@ def login_auth(request):
     password = request.POST.get('password','')
 
     url = 'http://192.168.1.8:8001/login/loginHandler/' + username + '/' + password
-
+    print url
     resp=requests.get(url)
     item = resp.json()
 
@@ -84,6 +85,13 @@ def login_auth(request):
         return HttpResponseRedirect('/nfv/enterprise')
     else:
         return HttpResponseRedirect('/nfv/invalid')
+
+def deleteCatalog(request):
+    catalogId = request.POST.get('catalogId')
+    url = 'http://192.168.1.8:8001/admin/delete/' + catalogId
+    resp=requests.get(url)
+    messages.error(request, 'Catalog deleted successfully')
+    return HttpResponseRedirect('/nfv/admin')
 
 
 def CreateVNF(request):
@@ -161,12 +169,14 @@ def CreateVNF(request):
 
     dev_api = ip + '/developer/create/'
 
-    url = dev_api + vnfName + '/' + vnfDesc + '/' + imgLoc + '/' + vnfDefinitionName + '/' + configName + '/' + parameterValuePointName + '/' + vnfDefinitionPath.replace(
-        '\\', '\\\\') + '/' + configPath.replace('\\', '\\\\') + '/' + parameterValuePointPath.replace('\\',
-                                                                                                       '\\\\') + '/' + imagePath.replace(
-        '\\', '\\\\')
-
-    resp = requests.get(url)
+    #data = {'vnfName':vnfName, 'vnfDesc' : vnfDesc, 'imgLoc' : imgLoc, 'vnfDefinitionName': vnfDefinitionName, 'configName' : configName, 'parameterValuePointName': parameterValuePointName, 'vnfDefinitionPath' : urllib.quote(vnfDefinitionPath, safe=''), 'configPath': urllib.quote(configPath, safe=''), 'parameterValuePointPath' : urllib.quote(parameterValuePointPath, safe=''), 'imagePath' : urllib.quote(imagePath, safe='')}
+    data = {'vnfName':vnfName, 'vnfDesc' : vnfDesc, 'imgLoc' : imgLoc, 'vnfDefinitionName': vnfDefinitionName, 'configName' : configName, 'parameterValuePointName': parameterValuePointName, 'vnfDefinitionPath' : vnfDefinitionPath, 'configPath': configPath, 'parameterValuePointPath' : parameterValuePointPath, 'imagePath' : imagePath}
+    print '*********************************************************'
+    print data
+    print '*********************************************************'
+    url = dev_api + vnfName + '/' + vnfDesc + '/' + imgLoc + '/' + vnfDefinitionName + '/' + configName + '/' + parameterValuePointName + '/' + urllib.quote(vnfDefinitionPath, safe='') + '/' + urllib.quote(configPath, safe='') + '/' + urllib.quote(parameterValuePointPath, safe='') + '/' + urllib.quote(imagePath, safe='')
+    print url
+    resp = requests.post(dev_api, json=data)
     item = resp.json()
     if item['CatalogId'] != None:
         print "Success"
@@ -189,7 +199,7 @@ def uploadVNF(request):
         if obj['status'] != 'success':
             messages.error(request, 'Invalid (' + request.FILES[
                 'vnfDefinition'].name + ') file - Not Compliant to TOSCA Standards')
-            return HttpResponseRedirect('/nfv/developer')
+            return HttpResponseRedirect('/nfv/admin')
         else:
             r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
             obj = r.json()
@@ -206,7 +216,7 @@ def uploadVNF(request):
         if obj['status'] != 'success':
             messages.error(request,
                            'Invalid (' + request.FILES['Config'].name + ') file - Not Compliant to TOSCA Standards.')
-            return HttpResponseRedirect('/nfv/developer')
+            return HttpResponseRedirect('/nfv/admin')
         else:
             r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
             obj = r.json()
@@ -223,7 +233,7 @@ def uploadVNF(request):
         if obj['status'] != 'success':
             messages.error(request, 'Invalid (' + request.FILES[
                 'ParameterValuePoint'].name + ') file - Not Compliant to TOSCA Standards.')
-            return HttpResponseRedirect('/nfv/developer')
+            return HttpResponseRedirect('/nfv/admin')
         else:
             r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
             obj = r.json()
@@ -235,12 +245,14 @@ def uploadVNF(request):
 
     dev_api = ip + '/developer/uploadFile/'
 
-    url = dev_api + catalogId + '/' + vnfDefinitionName + '/' + vnfDefinitionPath.replace('\\',
-                                                                                          '\\\\') + '/' + configName + '/' + configPath.replace(
-        '\\', '\\\\') + '/' + parameterValuePointName + '/' + parameterValuePointPath.replace('\\', '\\\\')
+    #url = dev_api + catalogId + '/' + vnfDefinitionName + '/' + vnfDefinitionPath.replace('\\',
+    #                                                                                      '\\\\') + '/' + configName + '/' + configPath.replace(
+    #    '\\', '\\\\') + '/' + parameterValuePointName + '/' + parameterValuePointPath.replace('\\', '\\\\')
+
+    data = {'vnfId':catalogId, 'vnfDefinitionName': vnfDefinitionName, 'configName' : configName, 'parameterValuePointName': parameterValuePointName, 'vnfDefinitionPath' : vnfDefinitionPath, 'configPath': configPath, 'parameterValuePointPath' : parameterValuePointPath}
     print "**************************************************************************"
-    print url
-    resp = requests.get(url)
+    #print url
+    resp = requests.post(dev_api, json=data)
     item = resp.json()
     messages.error(request, 'Files uploaded successfully')
     return HttpResponseRedirect('/nfv/admin')
@@ -250,7 +262,7 @@ def handle_uploaded_file(f):
     print f.name
     extension = f.name.split('.')[-1]
     filename = f.name +`random.random()` + '.' + extension
-    path = '/home/rdk/' + filename
+    path = '/home/rdk/client/' + filename
     with open(path, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)

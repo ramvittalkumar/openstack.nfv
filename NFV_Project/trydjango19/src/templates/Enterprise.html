@@ -133,60 +133,60 @@
 
     <script>
     $(document).ready(function (){
-        $.getJSON('http://192.168.1.8:8001/admin/listCatalog',function(CatalogResults){
-            table = $("#EnterpriseDetails").find("tbody");
+
+        $('#searchBox').on('input', function() {
+            $("#EnterpriseDetails").find(".catalog").hide();
+            search = $('#searchBox').val();
+            $("#EnterpriseDetails").find(".catalog").each(function( index ) {
+                name = $(this).find(".catalogName").text();
+                name = name.toLowerCase();
+                desc = $(this).find(".desc").text();
+                desc = desc.toLowerCase();
+                status = $(this).find(".status").text();
+                status = status.toLowerCase();
+
+                if(name.indexOf(search)>-1 || desc.indexOf(search)>-1 || status.indexOf(search)>-1){
+                    $(this).show();
+                }
+
+            });
+        });
+
+        $.getJSON('http://192.168.1.8:8001/admin/listEnterpriseCatalog',function(CatalogResults){
+            table = $("#EnterpriseDetails");
             columnCount = 0;
             for (var i = 0; i < CatalogResults.length; i++){
                 if(columnCount % 3 == 0){
-                    r = '<tr></tr>';
+                    r = '<div class="row"></div>';
                     table.append(r);
                 }
                 columnCount++;
 
-                column = '<td>'
+                column = '<div class="col-md-4 catalog">'
                         +'  <div align="center">'
                         +'      <div align="left" class="thumbnail" style="background-color: #bcd9e1; overflow: auto; border: groove; width:90% ">'
-                        +'          <h5><span class="label label-success">VNF Name: </span><span style="font-size:smaller"> '+ CatalogResults[i].CatalogName +' </span> </h5>'
+                        +'          <h5><span class="label label-success">VNF Name: </span><span style="font-size:smaller"> <span class="catalogName">'+ CatalogResults[i].CatalogName +' </span></span> </h5>'
                         +'          <h5>'
                         +'              <span class="label label-success">Description: </span>'
-                        +'                  <textarea id="txtContent" name="txtContent" class="form-control" style="height: 55px; font-size: smaller" readonly> '+ CatalogResults[i].CatalogDesc +'</textarea>'
+                        +'                  <textarea id="txtContent" name="txtContent" class="form-control desc" style="height: 55px; font-size: smaller" readonly> '+ CatalogResults[i].CatalogDesc +'</textarea>'
                         +'          </h5>'
-                        +'          <h5><span class="label label-success">Status: </span><span style="font-size:smaller"> Approved </span> </h5>'
+                        +'          <h5><span class="label label-success">Status: </span><span style="font-size:smaller" class="status"> Approved </span> </h5>'
                         +'          <a onclick="loadCatalogFiles(this, '+CatalogResults[i].CatalogId+')" href="#" id="Upload">'
                         +'              <img src="{% static "nfv_img/Deploy.jpg" %}" height="50px" width="50px" title="Deploy" align="right" />'
                         +'          </a>'
                         +'      </div>'
                         +'  </div>'
-                        +'</td>';
-                table.find("tr:last").append(column);
+                        +'</div>';
+                table.find("div.row:last").append(column);
 
                 //table.append(tr);
 
             }
 
-            if(columnCount % 3 != 0){
-                table = $("#EnterpriseDetails").find("tbody");
-                while(true){
-                    table.find("tr:last").append("<td></td>");
-                    if(columnCount % 3 == 0){
-                        break;
-                    }
-                    columnCount++;
-                }
-            }
-
-            $('#EnterpriseDetails').DataTable({
-                "bPaginate": true,
-                "bFilter": true,
-                "bInfo": true,
-                "bSort": false,
-                "bDestroy": true,
-                "lengthMenu": [[2, 4, 8, -1], [2, 4, 8, "All"]]
-            });
-
-
             });
     });
+
+
 
     </script>
 
@@ -235,21 +235,15 @@
 
         </nav>
 
-        <div style="background-color: #a0dea0;">
-            <br />
-            <table id="EnterpriseDetails" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th> </th>
-                        <th> </th>
-                        <th style="height:20px"> </th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
+        <div id="EnterpriseDetails" style="background-color: rgb(160, 222, 160); overflow-x: hidden; overflow-y: auto; height: 500px;">
+            <div style="margin-right: 30px; margin-top: 10px; margin-bottom: 10px;" class="row">
+                <div class="pull-right">
+                    Search: <input id="searchBox" type="text"  style="margin-right: 10px;">
+                </div>
+            </div>
         </div>
+
+
         <br />
 
         <div id="myModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
