@@ -134,9 +134,11 @@
     <script>
     $(document).ready(function (){
 
+
         $('#searchBox').on('input', function() {
             $("#EnterpriseDetails").find(".catalog").hide();
             search = $('#searchBox').val();
+            search = search.toLowerCase();
             $("#EnterpriseDetails").find(".catalog").each(function( index ) {
                 name = $(this).find(".catalogName").text();
                 name = name.toLowerCase();
@@ -172,13 +174,15 @@
                         +'          </h5>'
                         +'          <h5><span class="label label-success">Status: </span><span style="font-size:smaller" class="status"> Approved </span> </h5>'
                         +'          <a onclick="loadCatalogFiles(this, '+CatalogResults[i].CatalogId+')" href="#" id="Upload">'
-                        +'              <img src="{% static "nfv_img/Deploy.jpg" %}" height="50px" width="50px" title="Deploy" align="right" />'
+                        +'              <img src="{% static "nfv_img/Deploy.jpg" %}" class="clickImage" height="50px" width="50px" title="Deploy" align="right" />'
                         +'          </a>'
                         +'      </div>'
                         +'  </div>'
                         +'</div>';
                 table.find("div.row:last").append(column);
-
+                $(".clickImage").click(function(){
+                    $("#myModal").modal("show");
+                });
                 //table.append(tr);
 
             }

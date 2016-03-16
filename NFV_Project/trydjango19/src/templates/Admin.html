@@ -73,16 +73,26 @@
         });
         }
 
-        function loadCatalogFiles(obj, catalog_id)
-            {
-                var elem = $(obj).closest("td").prev();
-                 $("#ddlfileSelect").empty();
+        function loadCatalogFiles(obj, catalog_id){
+            var elem = $(obj).closest("td").prev();
+            $("#ddlfileSelect").empty();
+            parameter = "vnfd";
+            if(elem.find('span.vnfd').length != 0 && elem.find('span.vnfd').text() != "None"){
                 $("#ddlfileSelect").append("<option value='vnfd' selected=''>"+elem.find('span.vnfd').text()+"</option>");
-                $("#ddlfileSelect").append("<option value='vnf_cfg_filename' selected=''>"+elem.find('span.vnf_config').text()+"</option>");
-                $("#ddlfileSelect").append("<option value='vnf_param' selected=''>"+elem.find('span.vnf_param').text()+"</option>");
-                $("#myModal1").find(".catalogID").text(catalog_id);
-                populateFileContent(catalog_id, "vnf_param");
+                parameter = "vnfd";
             }
+            if(elem.find('span.vnf_config').length != 0 && elem.find('span.vnf_config').text() != "None"){
+                $("#ddlfileSelect").append("<option value='vnf_cfg_filename' selected=''>"+elem.find('span.vnf_config').text()+"</option>");
+                parameter = "vnf_config";
+            }
+            if(elem.find('span.vnf_param').length != 0 && elem.find('span.vnf_param').text() != "None"){
+                $("#ddlfileSelect").append("<option value='vnf_param' selected=''>"+elem.find('span.vnf_param').text()+"</option>");
+                parameter = "vnf_param";
+            }
+
+            $("#myModal1").find(".catalogID").text(catalog_id);
+            populateFileContent(catalog_id, parameter);
+        }
 
         function getCatalogId(obj, catalog_id){
            $("#myModal").find(".catalog_id").val(catalog_id);
@@ -93,15 +103,15 @@
             var elem = $(obj).closest("td").prev();
             $("#downloadModal").find(".checkboxGroup").empty();
             $("#downloadModal").find(".downloadButton").show();
-            if(elem.find('span.vnfd').text() != "None"){
+            if(elem.find('span.vnfd').length != 0 && elem.find('span.vnfd').text() != "None"){
                 $("#downloadModal").find(".checkboxGroup").append('<input type="checkbox" class="file" value="vnfDefinition">'+elem.find('span.vnfd').text()+'<br/>');
             }
 
-            if(elem.find('span.vnf_config').text() != "None"){
+            if(elem.find('span.vnf_config').length != 0 && elem.find('span.vnf_config').text() != "None"){
                 $("#downloadModal").find(".checkboxGroup").append('<input type="checkbox" class="file" value="Config">'+elem.find('span.vnf_config').text()+'<br/>');
             }
 
-            if(elem.find('span.vnf_param').text() != "None"){
+            if(elem.find('span.vnf_param').length !=0  && elem.find('span.vnf_param').text() != "None"){
                 $("#downloadModal").find(".checkboxGroup").append('<input type="checkbox" class="file" value="ParameterValuePoint">'+elem.find('span.vnf_param').text()+'<br/>');
             }
 
@@ -197,13 +207,29 @@
                      tr.append("<td style='display: none'> <span class ='catalogId'>" + CatalogResults[i].CatalogId + "</span></td>");
                      tr.append("<td align='center'>" + CatalogResults[i].CatalogName + "</td>");
                      tr.append("<td align='center'>" + CatalogResults[i].CatalogDesc + "</td>");
-                     tr.append("<td align='center'> <span class='vnfd'>" + CatalogResults[i].VNFD_Filename + "</span><br><span class='vnf_config'>"+ CatalogResults[i].VNF_Config_Filename + "</span><br><span class='vnf_param'>" + CatalogResults[i].VNF_Param_Filename + "</span></td>");
-                         tr.append("<td>" + "<a data-toggle='modal' data-target='#myModal1' href='#' class='Preview' onclick='loadCatalogFiles(this, "+CatalogResults[i].CatalogId+")'>" +
-                                "<img src='{% static 'nfv_img/Preview.jpg' %}' height='25px' width='25px' style='border:groove' title='Preview' />"
+                     col="<td align='center'>";
+                     if(CatalogResults[i].VNFD_Filename != "None"){
+                        col += "<span class='vnfd'>" + CatalogResults[i].VNFD_Filename
+                        + "</span><br>";
+                     }
+
+                     if(CatalogResults[i].VNF_Config_Filename != "None"){
+                        col += "<span class='vnf_config'>"+ CatalogResults[i].VNF_Config_Filename
+                        + "</span><br>";
+                     }
+
+                     if(CatalogResults[i].VNF_Param_Filename != "None"){
+                        col += "<span class='vnf_param'>" + CatalogResults[i].VNF_Param_Filename + "</span>";
+                     }
+
+                     col += "</td>"
+                     tr.append(col);
+                     tr.append("<td>" + "<a data-toggle='modal' data-target='#myModal1' href='#' class='Preview' onclick='loadCatalogFiles(this, "+CatalogResults[i].CatalogId+")'>" +
+                            "<img src='{% static 'nfv_img/Preview.jpg' %}' height='25px' width='25px' style='border:groove' title='Preview' />"
                             + "</a>" +
                             "<img src='{% static 'nfv_img/download.png' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Download' onclick='popDownload(this, "+CatalogResults[i].CatalogId+")'/>"
                                 + "<a data-toggle='modal' data-target='#myModal' href='#' id='Upload'>" +
-                                "<img src='{% static 'nfv_img/upload.jpg' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Upload'  onclick='getCatalogId(this, "+CatalogResults[i].CatalogId+")' />"
+                            "<img src='{% static 'nfv_img/upload.jpg' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Upload'  onclick='getCatalogId(this, "+CatalogResults[i].CatalogId+")' />"
                             + "</a>" +
                             "<img src='{% static 'nfv_img/btn_del.gif' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Delete' onclick='deleteCatalog(this, "+CatalogResults[i].CatalogId+")' />"
                             + "<img src='{% static 'nfv_img/Publish.png' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Publish' />"

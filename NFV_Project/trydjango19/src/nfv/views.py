@@ -250,8 +250,7 @@ def uploadVNF(request):
     #    '\\', '\\\\') + '/' + parameterValuePointName + '/' + parameterValuePointPath.replace('\\', '\\\\')
 
     data = {'vnfId':catalogId, 'vnfDefinitionName': vnfDefinitionName, 'configName' : configName, 'parameterValuePointName': parameterValuePointName, 'vnfDefinitionPath' : vnfDefinitionPath, 'configPath': configPath, 'parameterValuePointPath' : parameterValuePointPath}
-    print "**************************************************************************"
-    #print url
+
     resp = requests.post(dev_api, json=data)
     item = resp.json()
     messages.error(request, 'Files uploaded successfully')
