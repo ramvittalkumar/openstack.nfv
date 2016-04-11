@@ -154,17 +154,13 @@
             });
         });
 
-        $.getJSON('http://192.168.1.8:8001/admin/listEnterpriseCatalog',function(CatalogResults){
+        $.getJSON('http://192.168.1.4:8004/admin/listEnterpriseCatalog',function(CatalogResults){
             table = $("#EnterpriseDetails");
             columnCount = 0;
             for (var i = 0; i < CatalogResults.length; i++){
-                if(columnCount % 3 == 0){
-                    r = '<div class="row"></div>';
-                    table.append(r);
-                }
-                columnCount++;
 
-                column = '<div class="col-md-4 catalog">'
+
+                column = '<div class="col-md-4 catalog" style="display:inline;">'
                         +'  <div align="center">'
                         +'      <div align="left" class="thumbnail" style="background-color: #bcd9e1; overflow: auto; border: groove; width:90% ">'
                         +'          <h5><span class="label label-success">VNF Name: </span><span style="font-size:smaller"> <span class="catalogName">'+ CatalogResults[i].CatalogName +' </span></span> </h5>'
@@ -179,7 +175,7 @@
                         +'      </div>'
                         +'  </div>'
                         +'</div>';
-                table.find("div.row:last").append(column);
+                table.append(column);
                 $(".clickImage").click(function(){
                     $("#myModal").modal("show");
                 });

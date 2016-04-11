@@ -12,8 +12,7 @@
       integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 
     <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
-        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     
@@ -24,20 +23,28 @@
 
     <script src="{% static  "js/jquery-2.1.4.js" %}"></script>
     <script src="{% static  "js/jquery.validate.min.js" %}"></script>
-    <script src="{% static  "js/bootstrap.js" %}"></script>
-    <script src="{% static  "js/bootstrap-datetimepicker.min.js" %}"></script>
+
     <script src="{% static  "js/jquery.dataTables.min.js" %}"></script>
     <script src="{% static  "js/dataTables.responsive.min.js" %}"></script>    
     <script src="{% static  "js/Developer.js" %}"></script>
     <script src="{% static  "js/Common.js" %}"></script>
-
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="{% static  "js/bootstrap-datetimepicker.min.js" %}"></script>
 
     <script>
         $( document ).ready(function() {
             {% if messages %}
                 $("#statusModal").modal("show");
             {% endif %}
+
+            $('#devTabs a').click(function (e) {
+                $(this).tab('show');
+                e.preventDefault();
+
+            });
         });
+
     </script>
 
     <style>
@@ -55,6 +62,7 @@
             -o-transform: scale(3);
             transform: scale(3);
         }
+
 
         .img-zoomlarge {
             width: 310px;
@@ -151,8 +159,9 @@
         alert('{{username}}');
     }
 
+
 </script>
-<form id="frmDeveloper" action="nfv/createVNF/" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+
     <div class="container" style="background-color: #F5F5F0;">
         <img style="float: right; width: 70px; height: 70px" alt="Cinque Terre" src="{% static "nfv_img/comtech.png" %}" />
         <div >
@@ -171,83 +180,148 @@
             </div>
         </div>
 
-            <nav class="navbar navbar-inverse" role="navigation" id="Menubar">
+        <nav class="navbar navbar-inverse" role="navigation" id="Menubar">
 
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed"
-                            data-toggle="collapse" data-target="#navbarContent">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                </div>
-                <div id="navbarContent" class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav navbar-left">
-                        <li class="activecustom"><a href="/nfv/developer">Developer</a></li>
-                        <!--<li><a href="Admin.html">Admin</a></li>-->
-                        <!--<li><a href="Enterprise.html">Enterprise</a></li>-->                  
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="/nfv/logout/" style=" font-size: small; color: whitesmoke;  text-align:right;float:right;">Logout</a></li>
-                    </ul>
-                </div>
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed"
+                        data-toggle="collapse" data-target="#navbarContent">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="navbarContent" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-left">
+                    <li class="activecustom"><a href="/nfv/developer">Developer</a></li>
+                    <!--<li><a href="Admin.html">Admin</a></li>-->
+                    <!--<li><a href="Enterprise.html">Enterprise</a></li>-->
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/nfv/logout/" style=" font-size: small; color: whitesmoke;  text-align:right;float:right;">Logout</a></li>
+                </ul>
+            </div>
 
-            </nav>
-         
-        <div style="background-color: #a0dea0; ">
-            <br />
-            <div class="form-group">
-                <label for="vnfName" class="control-label">VNF Name:</label>
-                <input type="text" class="form-control" id="txtvnfName" name='txtvnfName' />
-            </div>
-            <div class="form-group">
-                <label for="txtDescription" class="control-label">Description:</label>               
-                <textarea id="txtDescription" name='txtDescription' class="form-control" style="height: 50px;"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="ddlImageSource" class="control-label">Image Source:</label>
-                <select class="form-control" id="ddlImageSource" name='ddlImageSource' onchange="ImageSourceChange();">
-                    <option selected value="2">Image File</option>
-                    <option value="1">Image Location</option>
-                </select>
-            </div>
-            <div id="ImageFile">
-                <div class="form-group">
-                    <label for="txtImageFile" class="control-label">Image File:</label>                   
-                    <input type="file" name="ImageFile" id="ImageFile" />
+        </nav>
+
+
+        <div>
+          <!-- Nav tabs -->
+            <ul id="devTabs" class="nav nav-tabs" role="tablist">
+                <li class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Create Catalog</a></li>
+                <li><a href="#viewCatalog" aria-controls="view" role="tab" data-toggle="tab">View Catalogs</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="home">
+                    <form id="frmDeveloper" action="nfv/createVNF/" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                        <div style="background-color: #a0dea0;padding: 10px;">
+                            <br />
+                            <div class="form-group">
+                                <label for="vnfName" class="control-label">VNF Name:</label>
+                                <input type="text" class="form-control" id="txtvnfName" name='txtvnfName' />
+                            </div>
+                            <div class="form-group">
+                                <label for="txtDescription" class="control-label">Description:</label>
+                                <textarea id="txtDescription" name='txtDescription' class="form-control" style="height: 50px;"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="ddlImageSource" class="control-label">Image Source:</label>
+                                <select class="form-control" id="ddlImageSource" name='ddlImageSource' onchange="ImageSourceChange();">
+                                    <option selected value="2">Image File</option>
+                                    <option value="1">Image Location</option>
+                                </select>
+                            </div>
+                            <div id="ImageFile">
+                                <div class="form-group">
+                                    <label for="txtImageFile" class="control-label">Image File:</label>
+                                    <input type="file" name="ImageFile" id="ImageFile" />
+                                </div>
+                            </div>
+                            <div id="ImageLocation" style="display:none">
+                                <div class="form-group">
+                                    <label for="ImageLocation" class="control-label">Image Location:</label>
+                                    <input type="text" class="form-control" id="txtImageLocation" name='txtImageLocation' />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 form-group" id="vnfDefinition">
+                                    <label for="vnfDefinition" class="control-label">VNF Definition:</label>
+                                    <input type="file" name="vnfDefinition" id="vnfDefinition" />
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label for="Config" class="control-label">Config:</label>
+                                    <input type="file" name="Config" id="Config" />
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label for="ParameterValuePoint" class="control-label">Parameter Value Point:</label>
+                                    <input type="file" name="ParameterValuePoint" id="ParameterValuePoint" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="form-group" align="right">
+                                <button type="reset" id="resetUser" onclick="clearKnownUservalue()" class="btn btn-success">Reset</button>
+                                <button type="submit" id="submitUser" class="btn btn-success" >Submit</button>
+                                <label id="lblmessage" style="color: red; font-size: small" for="result"></label>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </div>
-            <div id="ImageLocation" style="display:none">
-                <div class="form-group">
-                    <label for="ImageLocation" class="control-label">Image Location:</label>
-                    <input type="text" class="form-control" id="txtImageLocation" name='txtImageLocation' />                  
+                <div role="tabpanel" class="tab-pane" id="viewCatalog">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                      <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                          <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                              Approved Catalogs
+                            </a>
+                          </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                          <div class="panel-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                          </div>
+                        </div>
+                      </div>
+                      <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingTwo">
+                          <h4 class="panel-title">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                              Pending Catalogs
+                            </a>
+                          </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                          <div class="panel-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                          </div>
+                        </div>
+                      </div>
+                      <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingThree">
+                          <h4 class="panel-title">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                              Rejected Catalogs
+                            </a>
+                          </h4>
+                        </div>
+                        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                          <div class="panel-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4 form-group" id="vnfDefinition">
-                    <label for="vnfDefinition" class="control-label">VNF Definition:</label>
-                    <input type="file" name="vnfDefinition" id="vnfDefinition" />
-                </div>
-                <div class="col-sm-4 form-group">
-                    <label for="Config" class="control-label">Config:</label>
-                    <input type="file" name="Config" id="Config" />
-                </div>
-                <div class="col-sm-4 form-group">
-                    <label for="ParameterValuePoint" class="control-label">Parameter Value Point:</label>
-                    <input type="file" name="ParameterValuePoint" id="ParameterValuePoint" />
-                </div>
-            </div>          
-            <br />
-            <div class="form-group" align="right">
-                <button type="reset" id="resetUser" onclick="clearKnownUservalue()" class="btn btn-success">Reset</button>
-                <button type="submit" id="submitUser" class="btn btn-success" >Submit</button>
-                <label id="lblmessage" style="color: red; font-size: small" for="result"></label>
-            </div>
+             </div>
+
         </div>
 
-        <div id="statusModal" class="modal fade" role="dialog">
-            <div class="modal-dialog">
+
+
+        <div id="statusModal" class="modal fade" role="dialog" >
+            <div class="modal-dialog" style="width: 800px !important;">
 
                 <!-- Modal content-->
                 <div class="modal-content">
@@ -259,7 +333,7 @@
                         {% if messages %}
                         <ul class="messages">
                             {% for message in messages %}
-                            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message|linebreaks }}</li>
                             {% endfor %}
                         </ul>
                         {% endif %}
@@ -279,7 +353,7 @@
     <script>
        Initialload();
     </script>
-   </form>
+
 </body>
 </body>
 </html>

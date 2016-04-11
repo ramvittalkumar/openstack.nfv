@@ -61,7 +61,7 @@ def login_auth(request):
     username = request.POST.get('username','')
     password = request.POST.get('password','')
 
-    url = 'http://192.168.1.8:8001/login/loginHandler/' + username + '/' + password
+    url = 'http://192.168.1.4:8004/login/loginHandler/' + username + '/' + password
     print url
     resp=requests.get(url)
     item = resp.json()
@@ -71,31 +71,31 @@ def login_auth(request):
     if item['UserRole']=="Developer":
         #username = {'Ram'}
         request.session['name'] = item['UserName']
-        return HttpResponseRedirect('/nfv/developer')
+        return HttpResponseRedirect('/nfv/developer/')
         #return HttpResponseRedirect('/nfv/developer',{"username":username})
         #return render(request, '/nfv/developer', {"username": username},content_type="application/xhtml+xml" )
     elif item['UserRole']=="admin":
         #username = 'Ben'
         #return HttpResponseRedirect('/nfv/admin' + '?username')
         request.session['name'] = item['UserName']
-        return HttpResponseRedirect('/nfv/admin')
+        return HttpResponseRedirect('/nfv/admin/')
       #  return render(request, '/nfv/admin', {"username": username},content_type="application/xhtml+xml" )
     elif item['UserRole']=="enterprise":
         request.session['name'] = item['UserName']
-        return HttpResponseRedirect('/nfv/enterprise')
+        return HttpResponseRedirect('/nfv/enterprise/')
     else:
-        return HttpResponseRedirect('/nfv/invalid')
+        return HttpResponseRedirect('/nfv/invalid/')
 
 def deleteCatalog(request):
     catalogId = request.POST.get('catalogId')
-    url = 'http://192.168.1.8:8001/admin/delete/' + catalogId
+    url = 'http://192.168.1.4:8004/admin/delete/' + catalogId
     resp=requests.get(url)
     messages.error(request, 'Catalog deleted successfully')
     return HttpResponseRedirect('/nfv/admin')
 
 
 def CreateVNF(request):
-    ip = 'http://192.168.1.8:8001'
+    ip = 'http://192.168.1.4:8004'
     print("Create VNF")
 
     vnfName= request.POST.get('txtvnfName','')
@@ -121,13 +121,14 @@ def CreateVNF(request):
         path = handle_uploaded_file(request.FILES['vnfDefinition'])
         r = requests.post(ip + '/admin/toscaValidate', files={'path': open(path, 'rb')})
         obj = r.json()
+
         if obj['status'] != 'success':
             messages.error(request, 'Invalid (' + request.FILES[
-                'vnfDefinition'].name + ') file - Not Compliant to TOSCA Standards')
+                'vnfDefinition'].name + ') file - Not Compliant to TOSCA Standards. \n\nThe following are the errors,' + str(obj['message']).replace('c:\\folder\\', ''))
             return HttpResponseRedirect('/nfv/developer')
         else:
-            r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
-            obj = r.json()
+            #r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
+            #obj = r.json()
             vnfDefinitionPath = obj['path']
             vnfDefinitionName = request.FILES['vnfDefinition'].name
     else:
@@ -142,8 +143,8 @@ def CreateVNF(request):
             messages.error(request, 'Invalid (' + request.FILES['Config'].name + ') file - Not Compliant to TOSCA Standards.')
             return HttpResponseRedirect('/nfv/developer')
         else:
-            r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
-            obj = r.json()
+            #r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
+            #obj = r.json()
             configPath = obj['path']
             configName = request.FILES['Config'].name
     else:
@@ -159,8 +160,8 @@ def CreateVNF(request):
                 'ParameterValuePoint'].name + ') file - Not Compliant to TOSCA Standards.')
             return HttpResponseRedirect('/nfv/developer')
         else:
-            r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
-            obj = r.json()
+            #r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
+            #obj = r.json()
             parameterValuePointPath = obj['path']
             parameterValuePointName = request.FILES['ParameterValuePoint'].name
     else:
@@ -188,7 +189,7 @@ def CreateVNF(request):
 
 
 def uploadVNF(request):
-    ip = 'http://192.168.1.8:8001'
+    ip = 'http://192.168.1.4:8004'
     catalogId = request.POST.get('catalog_id', '')
     print("Upload VNF for catalog:" + catalogId)
     if 'vnfDefinition' in request.FILES:
@@ -201,8 +202,8 @@ def uploadVNF(request):
                 'vnfDefinition'].name + ') file - Not Compliant to TOSCA Standards')
             return HttpResponseRedirect('/nfv/admin')
         else:
-            r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
-            obj = r.json()
+            #r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
+            #obj = r.json()
             vnfDefinitionPath = obj['path']
             vnfDefinitionName = request.FILES['vnfDefinition'].name
     else:
@@ -218,8 +219,8 @@ def uploadVNF(request):
                            'Invalid (' + request.FILES['Config'].name + ') file - Not Compliant to TOSCA Standards.')
             return HttpResponseRedirect('/nfv/admin')
         else:
-            r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
-            obj = r.json()
+            #r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
+            #obj = r.json()
             configPath = obj['path']
             configName = request.FILES['Config'].name
     else:
@@ -235,7 +236,7 @@ def uploadVNF(request):
                 'ParameterValuePoint'].name + ') file - Not Compliant to TOSCA Standards.')
             return HttpResponseRedirect('/nfv/admin')
         else:
-            r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
+            #r = requests.post(ip + '/admin/toscaTranslate', files={'path': open(path, 'rb')})
             obj = r.json()
             parameterValuePointPath = obj['path']
             parameterValuePointName = request.FILES['ParameterValuePoint'].name
@@ -261,7 +262,8 @@ def handle_uploaded_file(f):
     print f.name
     extension = f.name.split('.')[-1]
     filename = f.name +`random.random()` + '.' + extension
-    path = '/home/rdk/client/' + filename
+    #path = '/home/rdk/client/' + filename
+    path = 'c:\\files\\' + filename
     with open(path, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
@@ -304,6 +306,7 @@ def handle_uploaded_file(f):
 #
 
 def invalid_login(request):
+    print '***************************************************'
     return render_to_response('Invalid.html')
 
 def logout(request):

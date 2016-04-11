@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.conf.urls.static import static
-from nfv import views
+
 
 # from . import views {
 # {
@@ -58,3 +58,4 @@ urlpatterns = [
 
 if settings.DEBUG:
      urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
