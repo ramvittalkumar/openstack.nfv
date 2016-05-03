@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'^nfv/admin/$', "nfv.views.admin"),
     url(r'^nfv/enterprise/$', "nfv.views.enterprise"),
     url(r'^nfv/deleteCatalog/$', "nfv.views.deleteCatalog"),
+    url(r'^nfv/devops/$', "nfv.views.devops"),
     url(r'^$', "nfv.views.login_auth"),
    # url(r'^nfv/test/$', "nfv.views.test"),
 

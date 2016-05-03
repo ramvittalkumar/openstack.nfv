@@ -61,7 +61,7 @@ def login_auth(request):
     username = request.POST.get('username','')
     password = request.POST.get('password','')
 
-    url = 'http://192.168.1.4:8004/login/loginHandler/' + username + '/' + password
+    url = 'http://192.168.1.8:8004/login/loginHandler/' + username + '/' + password
     print url
     resp=requests.get(url)
     item = resp.json()
@@ -83,19 +83,22 @@ def login_auth(request):
     elif item['UserRole']=="enterprise":
         request.session['name'] = item['UserName']
         return HttpResponseRedirect('/nfv/enterprise/')
+    elif item['UserRole']=="Devops":
+        request.session['name'] = item['UserName']
+        return HttpResponseRedirect('/nfv/devops/')
     else:
         return HttpResponseRedirect('/nfv/invalid/')
 
 def deleteCatalog(request):
     catalogId = request.POST.get('catalogId')
-    url = 'http://192.168.1.4:8004/admin/delete/' + catalogId
+    url = 'http://192.168.1.8:8004/admin/delete/' + catalogId
     resp=requests.get(url)
     messages.error(request, 'Catalog deleted successfully')
     return HttpResponseRedirect('/nfv/admin')
 
 
 def CreateVNF(request):
-    ip = 'http://192.168.1.4:8004'
+    ip = 'http://192.168.1.8:8004'
     print("Create VNF")
 
     vnfName= request.POST.get('txtvnfName','')
@@ -171,7 +174,7 @@ def CreateVNF(request):
     dev_api = ip + '/developer/create/'
 
     #data = {'vnfName':vnfName, 'vnfDesc' : vnfDesc, 'imgLoc' : imgLoc, 'vnfDefinitionName': vnfDefinitionName, 'configName' : configName, 'parameterValuePointName': parameterValuePointName, 'vnfDefinitionPath' : urllib.quote(vnfDefinitionPath, safe=''), 'configPath': urllib.quote(configPath, safe=''), 'parameterValuePointPath' : urllib.quote(parameterValuePointPath, safe=''), 'imagePath' : urllib.quote(imagePath, safe='')}
-    data = {'vnfName':vnfName, 'vnfDesc' : vnfDesc, 'imgLoc' : imgLoc, 'vnfDefinitionName': vnfDefinitionName, 'configName' : configName, 'parameterValuePointName': parameterValuePointName, 'vnfDefinitionPath' : vnfDefinitionPath, 'configPath': configPath, 'parameterValuePointPath' : parameterValuePointPath, 'imagePath' : imagePath}
+    data = {'vnfName':vnfName, 'vnfDesc' : vnfDesc, 'imgLoc' : imgLoc, 'vnfDefinitionName': vnfDefinitionName, 'configName' : configName, 'parameterValuePointName': parameterValuePointName, 'vnfDefinitionPath' : vnfDefinitionPath, 'configPath': configPath, 'parameterValuePointPath' : parameterValuePointPath, 'imagePath' : imagePath, 'imageName':imageName}
     print '*********************************************************'
     print data
     print '*********************************************************'
@@ -189,7 +192,7 @@ def CreateVNF(request):
 
 
 def uploadVNF(request):
-    ip = 'http://192.168.1.4:8004'
+    ip = 'http://192.168.1.8:8004'
     catalogId = request.POST.get('catalog_id', '')
     print("Upload VNF for catalog:" + catalogId)
     if 'vnfDefinition' in request.FILES:
@@ -263,7 +266,7 @@ def handle_uploaded_file(f):
     extension = f.name.split('.')[-1]
     filename = f.name +`random.random()` + '.' + extension
     #path = '/home/rdk/client/' + filename
-    path = 'c:\\files\\' + filename
+    path = 'c:\\files\\' + f.name
     with open(path, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
@@ -340,6 +343,15 @@ def enterprise(request):
         c = {}
         c.update(csrf(request))
         return render_to_response('login.html', c)
+
+def devops(request):
+     if 'name' in request.session:
+        return render_to_response('migrate.html', context_instance=RequestContext(request))
+     else:
+        c = {}
+        c.update(csrf(request))
+        return render_to_response('login.html', c)
+
 
 
 

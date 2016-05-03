@@ -14,6 +14,9 @@
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
     integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+     <script src="http://malsup.github.io/jquery.blockUI.js"></script>
+
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
@@ -154,7 +157,7 @@
             });
         });
 
-        $.getJSON('http://192.168.1.4:8004/admin/listEnterpriseCatalog',function(CatalogResults){
+        $.getJSON('http://192.168.1.8:8004/admin/listEnterpriseCatalog',function(CatalogResults){
             table = $("#EnterpriseDetails");
             columnCount = 0;
             for (var i = 0; i < CatalogResults.length; i++){
@@ -169,16 +172,14 @@
                         +'                  <textarea id="txtContent" name="txtContent" class="form-control desc" style="height: 55px; font-size: smaller" readonly> '+ CatalogResults[i].CatalogDesc +'</textarea>'
                         +'          </h5>'
                         +'          <h5><span class="label label-success">Status: </span><span style="font-size:smaller" class="status"> Approved </span> </h5>'
-                        +'          <a onclick="loadCatalogFiles(this, '+CatalogResults[i].CatalogId+')" href="#" id="Upload">'
-                        +'              <img src="{% static "nfv_img/Deploy.jpg" %}" class="clickImage" height="50px" width="50px" title="Deploy" align="right" />'
+                        +'          <a onclick="deployCatalog(this, \''+CatalogResults[i].CatalogId+'\', \''+CatalogResults[i].vnfd_template_id+'\', \''+CatalogResults[i].CatalogName+'\')" href="#" id="Upload">'
+                        +'              <img src="{% static "nfv_img/Deploy.jpg" %}" height="50px" width="50px" title="Deploy" align="right" />'
                         +'          </a>'
                         +'      </div>'
                         +'  </div>'
                         +'</div>';
                 table.append(column);
-                $(".clickImage").click(function(){
-                    $("#myModal").modal("show");
-                });
+
                 //table.append(tr);
 
             }
@@ -186,7 +187,26 @@
             });
     });
 
+    function deployCatalog(thisObj, catalogId, vnfdTemplateId, vndfname){
+        var r = confirm("Do you want to deploy: " + vndfname);
+        if (r == true) {
+            $.ajax({
+                type: "GET",
+                url:"http://192.168.1.8:8004/enterprise/DeployVnfdTemplate?vnfTemplateId="+vnfdTemplateId+"&vndfname="+vndfname,
+                success: function(json){
+                    $.unblockUI;
+                    if(json.status == "success"){
+                        alert("VNF Deployed Successfully");
+                    }else{
+                        alert("Some problem occurred while deploying VNF.");
+                    }
 
+                } ,
+                dataType: 'json'
+            });
+        }
+
+    }
 
     </script>
 

@@ -43,7 +43,7 @@
 
             });
 
-            var approveApi = 'http://192.168.1.4:8004/admin/approve/[' + catalogs.join()+']';
+            var approveApi = 'http://192.168.1.8:8004/admin/approve/[' + catalogs.join()+']';
 
             //alert(approveApi);
 
@@ -63,7 +63,7 @@
 
             });
 
-            var rejectApi = 'http://192.168.1.4:8004/admin/reject/[' + catalogs.join()+']';
+            var rejectApi = 'http://192.168.1.8:8004/admin/reject/[' + catalogs.join()+']';
 
             //alert(rejectApi);
 
@@ -129,7 +129,7 @@
             if($("#downloadModal").find(".file:checked").length == 0){
                 alert("please select atleast one file");
             }else{
-                url="http://192.168.1.4:8004/admin/downloadFile?catalogId="+catalagId;
+                url="http://192.168.1.8:8004/admin/downloadFile?catalogId="+catalagId;
                 $("#downloadModal").find(".file:checked").each(function(){
                     url+="&"+$(this).val()+"=true"
                 });
@@ -140,7 +140,7 @@
 
         function deleteCatalog(obj, catalog_id){
 
-            $.getJSON('http://192.168.1.4:8004/admin/delete/'+catalog_id,function(catalogFile){
+            $.getJSON('http://192.168.1.8:8004/admin/delete/'+catalog_id,function(catalogFile){
                 alert("Catalog deleted successfully");
                 location.reload();
             });
@@ -148,7 +148,7 @@
 
 
         function populateFileContent(catagoryId,fileType){
-            var catalogFileContentApi = 'http://192.168.1.4:8004/developer/displayFile/'+fileType+'/'+catagoryId
+            var catalogFileContentApi = 'http://192.168.1.8:8004/developer/displayFile/'+fileType+'/'+catagoryId
             $.getJSON(catalogFileContentApi,function(catalogFile){
                 //alert(catalogFile.content);
                  $("#txtContent").val(catalogFile.content);
@@ -182,7 +182,7 @@
             });
 
 
-            $.getJSON('http://192.168.1.4:8004/admin/listCatalog',function(CatalogResults){
+            $.getJSON('http://192.168.1.8:8004/admin/listCatalog',function(CatalogResults){
 
                /* var tr;
                         <th><input type="checkbox" name="chkhead" id="checkAll" > </th>
