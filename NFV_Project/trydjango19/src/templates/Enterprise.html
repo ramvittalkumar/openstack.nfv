@@ -135,6 +135,7 @@
     </style>
 
     <script>
+    var ip = "http://192.168.1.2:8888";
     $(document).ready(function (){
 
 
@@ -157,7 +158,7 @@
             });
         });
 
-        $.getJSON('http://192.168.1.8:8004/admin/listEnterpriseCatalog',function(CatalogResults){
+        $.getJSON(ip+'/admin/listEnterpriseCatalog',function(CatalogResults){
             table = $("#EnterpriseDetails");
             columnCount = 0;
             for (var i = 0; i < CatalogResults.length; i++){
@@ -192,7 +193,7 @@
         if (r == true) {
             $.ajax({
                 type: "GET",
-                url:"http://192.168.1.8:8004/enterprise/DeployVnfdTemplate?vnfTemplateId="+vnfdTemplateId+"&vndfname="+vndfname,
+                url:ip+"/enterprise/DeployVnfdTemplate?vnfTemplateId="+vnfdTemplateId+"&vndfname="+vndfname,
                 success: function(json){
                     $.unblockUI;
                     if(json.status == "success"){

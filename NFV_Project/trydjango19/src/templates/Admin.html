@@ -3,55 +3,99 @@
 
 <html>
 <head>
-    <title>User Details</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <title>NFV Admin</title>
+    <script src="https://code.jquery.com/jquery-1.12.2.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.0-rc.1/jquery-ui.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+	<script src="http://malsup.github.io/jquery.blockUI.js"></script>
 
-        <!-- Optional theme -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
-        integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
-        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0-rc.1/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+	<link rel="stylesheet" href="http://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel='stylesheet' href="{% static  'css/Common.css' %}"/>
+    <link rel='stylesheet' href="{% static  'css/bootstrap-datetimepicker.min.css' %}"/>
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-  
-    <link rel='stylesheet' href="{% static  "css/bootstrap.css" %}"/>
-    <link rel='stylesheet' href="{% static  "css/Common.css" %}"/>
-    <link rel='stylesheet' href="{% static  "css/bootstrap-datetimepicker.min.css" %}"/>
-    <link rel='stylesheet' href="{% static  "css/dataTables.bootstrap.min.css" %}"/>
-
-    <script src="{% static  "js/jquery-2.1.4.js" %}"></script>
-    <script src="{% static  "js/jquery.validate.min.js" %}"></script>
-    <script src="{% static  "js/bootstrap.js" %}"></script>
-    <script src="{% static  "js/bootstrap-datetimepicker.min.js" %}"></script>
- 
-    <script src="{% static  "js/jquery.dataTables.min.js" %}"></script>
-    <script src="{% static  "js/dataTables.responsive.min.js" %}"></script>   
-    <script src="{% static  "js/Admin.js" %}"></script>
-    <script src="{% static  "js/Common.js" %}"></script>
-    <script src="{% static  "js/test.json" %}"></script>
+    <script src="{% static  'js/Admin.js' %}"></script>
+    <script src="{% static  'js/Common.js' %}"></script>
 
     <script>
+        //$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+
+        var ip = "http://192.168.1.2:8888";
+        blockUI();
+        $.getJSON(ip+'/admin/listCatalog',function(CatalogResults){
+                for (var i = 0; i < CatalogResults.length; i++)
+                {
+                     tr = $('<tr/>');
+                     tr.append("<td align='center'>"+ "<input type='checkbox' name='name1' class='cbox' value='" + CatalogResults[i].CatalogId+ "' /> </td>");
+
+                     tr.append("<td style='display: none'> <span class ='catalogId'>" + CatalogResults[i].CatalogId + "</span></td>");
+                     tr.append("<td align='center'>" + CatalogResults[i].CatalogName + "</td>");
+                     tr.append("<td align='center'>" + CatalogResults[i].CatalogDesc + "</td>");
+                     col="<td align='center'>";
+                     if(CatalogResults[i].VNFD_Filename != "None"){
+                        col += "<span class='vnfd'>" + CatalogResults[i].VNFD_Filename
+                        + "</span><br>";
+                     }
+
+                     if(CatalogResults[i].VNF_Config_Filename != "None"){
+                        col += "<span class='vnf_config'>"+ CatalogResults[i].VNF_Config_Filename
+                        + "</span><br>";
+                     }
+
+                     if(CatalogResults[i].VNF_Param_Filename != "None"){
+                        col += "<span class='vnf_param'>" + CatalogResults[i].VNF_Param_Filename + "</span>";
+                     }
+
+                     col += "</td>"
+                     tr.append(col);
+                     tr.append("<td>" + "<a data-toggle='modal' data-target='#myModal1' href='#' class='Preview' onclick='loadCatalogFiles(this, "+CatalogResults[i].CatalogId+")'>" +
+                            "<img src='{% static 'nfv_img/Preview.jpg' %}' height='25px' width='25px' style='border:groove' title='Preview' />"
+                            + "</a>" +
+                            "<img src='{% static 'nfv_img/download.png' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Download' onclick='popDownload(this, "+CatalogResults[i].CatalogId+")'/>"
+                                + "<a data-toggle='modal' data-target='#myModal' href='#' id='Upload'>" +
+                            "<img src='{% static 'nfv_img/upload.jpg' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Upload'  onclick='getCatalogId(this, "+CatalogResults[i].CatalogId+")' />"
+                            + "</a>" +
+                            "<img src='{% static 'nfv_img/btn_del.gif' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Delete' onclick='deleteCatalog(this, "+CatalogResults[i].CatalogId+")' />"
+                            + "<img src='{% static 'nfv_img/Publish.png' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Publish' />"
+
+                            + "</td>");
+
+                     $('table').append(tr);
+
+                }
+                $('table').DataTable();
+                unblockUI();
+
+            });
 
         function Approve()
         {
             var catalogs=[];
             $(".cbox:checked").each(function(){
-
                 catalogs.push($(this).val());
-
             });
 
-            var approveApi = 'http://192.168.1.8:8004/admin/approve/[' + catalogs.join()+']';
+            var approveApi = ip+'/admin/approve/[' + catalogs.join()+']';
 
             //alert(approveApi);
-
-             $.getJSON(approveApi,function(approveResults){
-            alert(approveResults);
-                 location.reload();
-        });
+            blockUI();
+            $.ajax({
+                type: "GET",
+                url:approveApi,
+                success: function(json){
+                    alert("VNF approved and available for enterprise users.");
+                    location.reload();
+                } ,
+                dataType: 'json'
+            });
         }
+
+
 
         function Reject()
         {
@@ -63,10 +107,10 @@
 
             });
 
-            var rejectApi = 'http://192.168.1.8:8004/admin/reject/[' + catalogs.join()+']';
+            var rejectApi = ip+'/admin/reject/[' + catalogs.join()+']';
 
             //alert(rejectApi);
-
+            blockUI();
              $.getJSON(rejectApi,function(rejectResults){
                alert(rejectResults);
                location.reload();
@@ -129,7 +173,7 @@
             if($("#downloadModal").find(".file:checked").length == 0){
                 alert("please select atleast one file");
             }else{
-                url="http://192.168.1.8:8004/admin/downloadFile?catalogId="+catalagId;
+                url=ip+"/admin/downloadFile?catalogId="+catalagId;
                 $("#downloadModal").find(".file:checked").each(function(){
                     url+="&"+$(this).val()+"=true"
                 });
@@ -140,7 +184,7 @@
 
         function deleteCatalog(obj, catalog_id){
 
-            $.getJSON('http://192.168.1.8:8004/admin/delete/'+catalog_id,function(catalogFile){
+            $.getJSON(ip+'/admin/delete/'+catalog_id,function(catalogFile){
                 alert("Catalog deleted successfully");
                 location.reload();
             });
@@ -148,11 +192,24 @@
 
 
         function populateFileContent(catagoryId,fileType){
-            var catalogFileContentApi = 'http://192.168.1.8:8004/developer/displayFile/'+fileType+'/'+catagoryId
+            var catalogFileContentApi = ip+'/developer/displayFile/'+fileType+'/'+catagoryId
             $.getJSON(catalogFileContentApi,function(catalogFile){
                 //alert(catalogFile.content);
                  $("#txtContent").val(catalogFile.content);
             });
+        }
+
+        function blockUI(){
+            $("#blockUI").show();
+            $("#blockUIContent").show();
+
+        }
+
+
+        function unblockUI(){
+            $("#blockUI").hide();
+            $("#blockUIContent").hide();
+
         }
         $(document).ready(function ()
      {
@@ -182,65 +239,7 @@
             });
 
 
-            $.getJSON('http://192.168.1.8:8004/admin/listCatalog',function(CatalogResults){
 
-               /* var tr;
-                        <th><input type="checkbox" name="chkhead" id="checkAll" > </th>
-                        <th style="display: none">CatalogID</th>
-                        <th>VNF Name</th>
-                        <th>Description</th>
-                        <th>Files</th>
-                        <th style="width:15%">Preview / Download / Upload / Delete / Publish</th>
-                tr = $('<tr/>');
-                 tr.append("<th>"<input type="checkbox" name="chkhead" id="checkAll" >   "</th>")
-                 tr.append(<th style="display: none">CatalogID</th>)
-                tr.append(<th>VNF Name</th>)
-                tr.append(<th>Description</th>)
-                tr.append(<th>Files</th>)
-                tr.append(<th style="width:15%">Preview / Download / Upload / Delete / Publish</th>)
-*/
-                for (var i = 0; i < CatalogResults.length; i++)
-                {
-                     tr = $('<tr/>');
-                     tr.append("<td align='center'>"+ "<input type='checkbox' name='name1' class='cbox' value='" + CatalogResults[i].CatalogId+ "' /> </td>");
-
-                     tr.append("<td style='display: none'> <span class ='catalogId'>" + CatalogResults[i].CatalogId + "</span></td>");
-                     tr.append("<td align='center'>" + CatalogResults[i].CatalogName + "</td>");
-                     tr.append("<td align='center'>" + CatalogResults[i].CatalogDesc + "</td>");
-                     col="<td align='center'>";
-                     if(CatalogResults[i].VNFD_Filename != "None"){
-                        col += "<span class='vnfd'>" + CatalogResults[i].VNFD_Filename
-                        + "</span><br>";
-                     }
-
-                     if(CatalogResults[i].VNF_Config_Filename != "None"){
-                        col += "<span class='vnf_config'>"+ CatalogResults[i].VNF_Config_Filename
-                        + "</span><br>";
-                     }
-
-                     if(CatalogResults[i].VNF_Param_Filename != "None"){
-                        col += "<span class='vnf_param'>" + CatalogResults[i].VNF_Param_Filename + "</span>";
-                     }
-
-                     col += "</td>"
-                     tr.append(col);
-                     tr.append("<td>" + "<a data-toggle='modal' data-target='#myModal1' href='#' class='Preview' onclick='loadCatalogFiles(this, "+CatalogResults[i].CatalogId+")'>" +
-                            "<img src='{% static 'nfv_img/Preview.jpg' %}' height='25px' width='25px' style='border:groove' title='Preview' />"
-                            + "</a>" +
-                            "<img src='{% static 'nfv_img/download.png' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Download' onclick='popDownload(this, "+CatalogResults[i].CatalogId+")'/>"
-                                + "<a data-toggle='modal' data-target='#myModal' href='#' id='Upload'>" +
-                            "<img src='{% static 'nfv_img/upload.jpg' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Upload'  onclick='getCatalogId(this, "+CatalogResults[i].CatalogId+")' />"
-                            + "</a>" +
-                            "<img src='{% static 'nfv_img/btn_del.gif' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Delete' onclick='deleteCatalog(this, "+CatalogResults[i].CatalogId+")' />"
-                            + "<img src='{% static 'nfv_img/Publish.png' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Publish' />"
-
-                            + "</td>");
-
-                     $('table').append(tr);
-
-                }
-
-            });
 
 
 
@@ -351,7 +350,6 @@
 
 </head>
 <body>
-<form id="frmAdmin">{% csrf_token %}
     <div class="container" style="background-color: #F5F5F0;">
         <img style="float: right; width: 70px; height: 70px" alt="Cinque Terre" src="{% static "nfv_img/comtech.png" %}" />
         <div>
@@ -465,7 +463,6 @@
         Initialload();
     </script>-->
 
- </form>
 
 <div id="myModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <form id="uploadCatalogForm" action="/nfv/uploadVNF/" method="POST" enctype="multipart/form-data">{% csrf_token %}
@@ -575,6 +572,11 @@
         </div>
 
     </div>
+</div>
+
+<div id="blockUI" class="blockUI blockOverlay" style="z-index: 1000; border: medium none; margin: 0px; padding: 0px; width: 100%; height: 100%; top: 0px; left: 0px; background-color: rgb(0, 0, 0); opacity: 0.6; cursor: wait; position: fixed;"></div>
+<div id="blockUIContent" class="blockUI blockMsg blockPage" style="z-index: 1011; position: fixed; padding: 0px; margin: 0px; width: 30%; top: 40%; left: 35%; text-align: center; color: rgb(0, 0, 0); border: 3px solid rgb(170, 170, 170); background-color: rgb(255, 255, 255); cursor: wait;">
+<h1>Please wait...</h1>
 </div>
 </body>
 

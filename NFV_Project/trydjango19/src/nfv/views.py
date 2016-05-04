@@ -14,6 +14,18 @@ import json
 import requests
 import random
 import urllib
+import urllib2
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
+
+
+
+
+import httplib
+
+
+
+import properties
 
 
 def namedtuplefetchall(cursor):
@@ -57,11 +69,12 @@ def login(request):
     return render_to_response('login.html', c)
 
 def login_auth(request):
+    ip = properties.service_ip
 
     username = request.POST.get('username','')
     password = request.POST.get('password','')
 
-    url = 'http://192.168.1.8:8004/login/loginHandler/' + username + '/' + password
+    url = ip+'/login/loginHandler/' + username + '/' + password
     print url
     resp=requests.get(url)
     item = resp.json()
@@ -90,35 +103,52 @@ def login_auth(request):
         return HttpResponseRedirect('/nfv/invalid/')
 
 def deleteCatalog(request):
+    ip = properties.service_ip
     catalogId = request.POST.get('catalogId')
-    url = 'http://192.168.1.8:8004/admin/delete/' + catalogId
+    url = ip+'/admin/delete/' + catalogId
     resp=requests.get(url)
     messages.error(request, 'Catalog deleted successfully')
     return HttpResponseRedirect('/nfv/admin')
 
 
 def CreateVNF(request):
-    ip = 'http://192.168.1.8:8004'
+    ip = properties.service_ip
     print("Create VNF")
 
     vnfName= request.POST.get('txtvnfName','')
     vnfDesc = request.POST.get('txtDescription','')
     imgLoc = request.POST.get('txtImageLocation','')
+    imagePath = ''
+    imageName = ''
     # vnfDef = request.POST.get('vnfDefinition','')
     # vnfConfig = request.POST.get('Config','')
     # vnfParam = request.POST.get('ParameterValuePoint','')
     if imgLoc == '':
         imgLoc = 'NA'
 
-    if 'ImageFile' in request.FILES:
+    if imgLoc == 'NA' and 'ImageFile' not in request.FILES:
+        messages.error(request, 'Please provide image file or image link')
+        return HttpResponseRedirect('/nfv/developer')
+    elif 'ImageFile' in request.FILES:
         path = handle_uploaded_file(request.FILES['ImageFile'])
         r = requests.post(ip + '/admin/uploadImage', files={'path': open(path, 'rb')})
         obj = r.json()
         imagePath = obj['path']
         imageName = request.FILES['ImageFile'].name
-    else:
-        messages.error(request, 'Please provide image file')
-        return HttpResponseRedirect('/nfv/developer')
+    elif imgLoc != 'NA':
+        imagePath = 'NA'
+        imageName = 'NA'
+        try:
+            urllib2.urlopen(imgLoc)
+        except urllib2.HTTPError, e:
+            messages.error(request, "The url provided is invalid")
+            print(e.code)
+            return HttpResponseRedirect('/nfv/developer')
+        except urllib2.URLError, e:
+            messages.error(request, "The url provided is invalid")
+            print(e.args)
+            return HttpResponseRedirect('/nfv/developer')
+
 
     if 'vnfDefinition' in request.FILES:
         path = handle_uploaded_file(request.FILES['vnfDefinition'])
@@ -184,15 +214,15 @@ def CreateVNF(request):
     item = resp.json()
     if item['CatalogId'] != None:
         print "Success"
-        messages.error(request, 'Files Compliant with TOSCA Standards and catalog added successfully with ID:' + item[
-            'CatalogId'])
+        messages.error(request, 'Files Compliant with TOSCA Standards and catalog added successfully with ID:' + str(item[
+            'CatalogId']))
         return HttpResponseRedirect('/nfv/developer')
 
     return HttpResponseRedirect('/nfv/developer')
 
 
 def uploadVNF(request):
-    ip = 'http://192.168.1.8:8004'
+    ip = properties.service_ip
     catalogId = request.POST.get('catalog_id', '')
     print("Upload VNF for catalog:" + catalogId)
     if 'vnfDefinition' in request.FILES:
@@ -265,8 +295,8 @@ def handle_uploaded_file(f):
     print f.name
     extension = f.name.split('.')[-1]
     filename = f.name +`random.random()` + '.' + extension
-    #path = '/home/rdk/client/' + filename
-    path = 'c:\\files\\' + f.name
+    path = properties.filestoreparth + f.name
+    #path = 'c:\\files\\' + f.name
     with open(path, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)

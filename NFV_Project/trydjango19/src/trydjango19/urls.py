@@ -31,7 +31,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^nfv/$', "nfv.views.login"),
-     url(r'^nfv/login/$', "nfv.views.login"),
+    url(r'^nfv/login/$', "nfv.views.login"),
     #url(r'^nfv/submit/$', "nfv.views.submit"),
     url(r'^nfv/auth/$', "nfv.views.login_auth"),
     url(r'^nfv/developer/nfv/createVNF/$', "nfv.views.CreateVNF"),

@@ -178,3 +178,6 @@ CORS_EXPOSE_HEADERS = (
         'x-a12n',
         'x-pseudo-folder',
     )
+
+
+service_ip="http://192.168.1.2:8888"
