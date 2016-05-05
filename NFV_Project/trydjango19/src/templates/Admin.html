@@ -58,7 +58,7 @@
                             + "</a>" +
                             "<img src='{% static 'nfv_img/download.png' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Download' onclick='popDownload(this, "+CatalogResults[i].CatalogId+")'/>"
                                 + "<a data-toggle='modal' data-target='#myModal' href='#' id='Upload'>" +
-                            "<img src='{% static 'nfv_img/upload.jpg' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Upload'  onclick='getCatalogId(this, "+CatalogResults[i].CatalogId+")' />"
+                            "<img src='{% static 'nfv_img/Upload.jpg' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Upload'  onclick='getCatalogId(this, "+CatalogResults[i].CatalogId+")' />"
                             + "</a>" +
                             "<img src='{% static 'nfv_img/btn_del.gif' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Delete' onclick='deleteCatalog(this, "+CatalogResults[i].CatalogId+")' />"
                             + "<img src='{% static 'nfv_img/Publish.png' %}' height='25px' width='25px' style='border:groove;cursor: pointer;' title='Publish' />"
@@ -368,7 +368,7 @@
             </div>
         </div>
 
-        <nav class="navbar navbar-inverse" role="navigation" id="Menubar">
+        <nav class="navbar navbar-inverse" role="navigation" id="Menubar" style="background-color: black;">
 
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed"
@@ -383,7 +383,7 @@
                 <ul class="nav navbar-nav navbar-left">
                     <!--<li><a href="Developer.html">Developer</a></li>-->
                     <li class="activecustom"><a href="/nfv/admin">Admin</a></li>
-                    <li><a href="/nfv/enterprise">Enterprise</a></li>
+                    <!--<li><a href="/nfv/enterprise">Enterprise</a></li>
                     <!--<li><a href="Enterprise.html">Enterprise</a></li>-->
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -403,7 +403,7 @@
                         <th>VNF Name</th>
                         <th>Description</th>
                         <th>Files</th>
-                        <th style="width:15%">Preview / Download / Upload / Delete / Publish</th>
+                        <th style="width:15%">Actions</th>
                     </tr>
                 </thead>
  <!--               <tbody>
